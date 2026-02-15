@@ -1,3 +1,9 @@
+"""
+Fast Voice-to-Text Server Entry Point.
+
+This module initializes and runs the Transcription Server, loading configuration
+from `app.yaml` and warming up the Whisper model.
+"""
 import logging
 from fast_voice.config import Config
 from fast_voice.whisper_live.server import TranscriptionServer
@@ -7,6 +13,13 @@ from fast_voice.whisper_live.backend.faster_whisper_backend import ServeClientFa
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s] [%(levelname)s] %(message)s')
 
 def start():
+    """
+    Start the Voice-to-Text Daemon (v2td).
+    
+    1. Loads configuration from app.yaml
+    2. Preloads/Warms up the Whisper model
+    3. Starts the WebSocket server
+    """
     print("⚡ Fast Voice-to-Text Daemon (v2td) starting...")
     config = Config()
     

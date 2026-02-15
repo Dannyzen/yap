@@ -10,12 +10,24 @@ from fast_voice.config import Config
 from .daemon import ensure_daemon_running
 
 class VoiceClient:
+    """
+    Client for capturing audio and streaming it to the Fast Voice-to-Text server.
+
+    Handles audio capture via PyAudio, signal processing (resampling, normalization),
+    and WebSocket communication.
+    """
     def __init__(self, host="localhost", port=9090):
+        """
+        Initialize the voice client.
+
+        Args:
+            host (str): The hostname of the server. Defaults to "localhost".
+            port (int): The port of the server. Defaults to 9090.
+        """
         # Auto-start daemon if needed
         ensure_daemon_running(host, port)
         
         self.uri = f"ws://{host}:{port}"
-        self.uid = str(uuid.uuid4())
         self.uid = str(uuid.uuid4())
         
         # Suppress ALSA/Jack error messages
@@ -50,7 +62,13 @@ class VoiceClient:
 
     async def run(self, duration=10, on_transcription=None, on_live_update=None, use_vad=True):
         """
-        Connects to server, streams audio, and calls callbacks.
+        Connects to the server, streams audio, and handles incoming transcription updates.
+
+        Args:
+            duration (int): How long to record in seconds. Defaults to 10.
+            on_transcription (callable, optional): Callback when final text is ready.
+            on_live_update (callable, optional): Callback for real-time partial text updates.
+            use_vad (bool): Whether to enable Voice Activity Detection on the server.
         """
         print(f"Connecting to {self.uri}...", file=sys.stderr)
         async with websockets.connect(self.uri) as websocket:
@@ -92,6 +110,20 @@ class VoiceClient:
                 pass
 
     async def send_audio(self, websocket, stop_event):
+        """
+        Captures audio from the microphone and streams it to the server.
+
+        Includes a signal processing pipeline:
+        1. Capture raw PCM (Int16, Stereo/Mono).
+        2. Downmix to Mono.
+        3. Resample to 16kHz (if needed).
+        4. Normalize to Float32.
+        5. Stream via WebSocket.
+
+        Args:
+            websocket: Active WebSocket connection.
+            stop_event (asyncio.Event): Event to signal stopping the stream.
+        """
         try:
             stream = self.p.open(
                 format=self.format,

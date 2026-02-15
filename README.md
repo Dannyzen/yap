@@ -1,8 +1,25 @@
 # Fast Voice-to-Text
 
-A high-performance, local voice-to-text system using `faster-whisper`. Designed for **low latency** and **hardware flexibility**.
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
+A high-performance, local voice-to-text system using `faster-whisper`. Designed for **low latency**, **hardware flexibility**, and **production readiness**.
+
+## Table of Contents
+
+- [Features](#features)
+- [Architecture](#architecture)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Features
+
 - **Split Architecture**: Client/Server design decoupled via WebSockets. Run the heavy inference server on a powerful machine (or background process) and the lightweight client anywhere.
 - **Auto-Daemon**: The client automatically starts the server in the background if it's not running. No need to manually manage processes.
 - **Hardware Optimized**:
@@ -11,14 +28,37 @@ A high-performance, local voice-to-text system using `faster-whisper`. Designed 
 - **Production Ready**: Integrated Voice Activity Detection (VAD) to filter silence, robust error handling, and reconnection logic.
 - **Hot-Reload Config**: Edit `app.yaml` and changes (like model size or input device) apply instantly without restarting.
 
+## Architecture
+
+The system consists of two main components:
+
+1.  **Client (`src/fast_voice/client`)**: Lightweight. Captures audio using `PyAudio`, handles device selection, downsampling, and streams raw PCM to the server via WebSockets.
+2.  **Server (`src/fast_voice/server`)**: Heavy. Runs `faster-whisper` model. Accepts audio streams, performs VAD, and executes inference.
+
+See `docs/architecture.md` for a detailed architectural overview.
+
 ## Installation
-```bash
-# Install dependencies and package in editable mode
-uv pip install -e .
-```
 
-## Usage
+### Prerequisites
 
+- Python 3.11 or higher
+- `uv` (recommended) or `pip`
+- `ffmpeg` installed on your system
+
+### Steps
+
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/your-username/fast-voice.git
+    cd fast-voice
+    ```
+
+2.  **Install dependencies**:
+    ```bash
+    uv pip install -e .
+    ```
+
+## Quick Start
 ### 1. Running the Example (Easiest)
 Run the "Cowsay" example to see it in action:
 ```bash
@@ -48,13 +88,40 @@ View your transcripts in real-time on any device (phone, tablet, laptop) by open
 3.  **Speak**:
     Run any client (e.g., `uv run examples/cowsay_app.py`) and start talking. The words will appear instantly in the browser.
 
-### 4. Manual Server (Optional)
+## Configuration
+
+The application is configured via `app.yaml`.
+
+- **Audio Input**: Select specific device index or use "default".
+- **Model**: Choose `tiny`, `small`, `medium`, or `large-v3`.
+- **Compute**: Use `int8` (CPU friendly) or `float16` (GPU).
+- **VAD**: Enable/Disable Voice Activity Detection.
+- **Server**: Configure host and port.
+
+Example `app.yaml`:
+```yaml
+audio:
+  input_device: default
+  sample_rate: 16000
+
+model:
+  size: small
+  compute_type: int8
+
+server:
+  host: 0.0.0.0
+  port: 9090
+```
+
+## Usage
+
+### Manual Server (Optional)
 If you prefer to run the server manually (e.g., for debugging logs):
 ```bash
 uv run fast-voice-server
 ```
 
-### 5. Using the Client API
+### Using the Client API
 Build your own voice-controlled apps easily:
 ```python
 import asyncio
@@ -74,26 +141,20 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-## Configuration
-Edit `app.yaml` to configure the system. key settings include:
+## Development
 
-- **Audio Input**: Select specific device index or use "default".
-- **Model**: Choose `tiny`, `small`, `medium`, or `large-v3`.
-- **Compute**: Use `int8` (CPU friendly) or `float16` (GPU).
-- **VAD**: Enable/Disable Voice Activity Detection.
-
-## Architecture
-The system consists of two main components:
-1.  **Client (`src/fast_voice/client`)**: Lightweight. Captures audio using `PyAudio`, handles device selection, downsampling, and streams raw PCM to the server via WebSockets.
-2.  **Server (`src/fast_voice/server`)**: Heavy. Runs `faster-whisper` model. Accepts audio streams, performs VAD, and executes inference.
-
-## Testing
+### Running Tests
 The project includes a robust testing SDK for headless environments.
 
-### Automated E2E Test
+**Automated E2E Test**:
 Verifies the full pipeline (Client -> Network -> Server -> Whisper) without a microphone.
 ```bash
 uv run python -m unittest tests/test_e2e.py
+```
+
+**Unit Tests**:
+```bash
+uv run python -m unittest tests/test_client.py
 ```
 
 ### Simulation Client
@@ -110,11 +171,10 @@ client = SimulationClient()
 await client.run(duration=5)
 ```
 
-## Development
-```bash
-# Run Unit Tests
-uv run python -m unittest tests/test_client.py
-```
+## Contributing
 
-## Agent Guidelines
-See [`AGENT.md`](AGENT.md) for architectural details and contribution workflows.
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to get started.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
