@@ -17,8 +17,14 @@ class ServeClientFasterWhisper(ServeClientBase):
     @classmethod
     def preload_model(cls, model_size, device=None, compute_type=None):
         """
-        Pre-loads the Whisper model into the class-level SINGLE_MODEL variable.
-        Useful for warming up the server before accepting connections.
+        Pre-loads the Whisper model into the class-level singleton.
+        This is used for server warmup to ensure the model is ready before
+        any client connects.
+
+        Args:
+            model_size (str): Size of the model to load (e.g. "small", "base")
+            device (str, optional): "cuda" or "cpu". Auto-detected if None.
+            compute_type (str, optional): "int8", "float16", "float32". Auto-detected if None.
         """
         with cls.SINGLE_MODEL_LOCK:
             if cls.SINGLE_MODEL is not None:
@@ -34,40 +40,12 @@ class ServeClientFasterWhisper(ServeClientBase):
                     compute_type = "float16" if major >= 7 else "float32"
                 else:
                     compute_type = "int8"
-            
-            logging.info(f"Pre-loading model '{model_size}' on {device} ({compute_type})...")
-            try:
-                cls.SINGLE_MODEL = WhisperModel(
-                    model_size,
-                    device=device,
-                    compute_type=compute_type
-                )
-                logging.info("Model pre-loaded successfully.")
-            except Exception as e:
-                logging.error(f"Failed to pre-load model: {e}")
-                raise e
-
-    @classmethod
-    def preload_model(cls, model_size, device=None, compute_type=None):
-        """
-        Pre-loads the Whisper model into the class-level singleton.
-        This is used for server warmup to ensure the model is ready before
-        any client connects.
-        """
-        with cls.SINGLE_MODEL_LOCK:
-            if cls.SINGLE_MODEL is not None:
-                return
-
-            if device is None:
-                device = "cuda" if torch.cuda.is_available() else "cpu"
-            
-            if compute_type is None:
-                if device == "cuda":
-                    major, _ = torch.cuda.get_device_capability(device)
-                    compute_type = "float16" if major >= 7 else "float32"
-                else:
+            else:
+                # Safety checks for user-provided compute_type
+                if device == "cpu" and compute_type == "float16":
+                    logging.warning("⚠️ Float16 is not supported on CPU. Falling back to int8.")
                     compute_type = "int8"
-            
+
             logging.info(f"[Warmup] Loading Model: {model_size} on {device} ({compute_type})...")
             try:
                 cls.SINGLE_MODEL = WhisperModel(
@@ -78,7 +56,7 @@ class ServeClientFasterWhisper(ServeClientBase):
                 logging.info("[Warmup] Model loaded successfully.")
             except Exception as e:
                 logging.error(f"[Warmup] Failed to load model: {e}")
-                raise
+                raise e
 
     def __init__(
         self,
