@@ -38,11 +38,11 @@ class TestCowsayApp(unittest.TestCase):
         # Verify run called with correct args
         mock_client_instance.run.assert_awaited_once()
         kwargs = mock_client_instance.run.call_args[1]
-        self.assertIn('on_live_update', kwargs)
-        self.assertTrue(callable(kwargs['on_live_update']))
+        self.assertIn('on_transcription', kwargs)
+        self.assertTrue(callable(kwargs['on_transcription']))
         
         # Verify callback works
-        callback = kwargs['on_live_update']
+        callback = kwargs['on_transcription']
         
         # Capture stdout for callback execution
         captured_output = io.StringIO()

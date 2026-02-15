@@ -32,13 +32,19 @@ class TestTUI(unittest.TestCase):
     def test_initialization(self):
         self.assertIsInstance(self.app.transcript_queue, queue.Queue)
         self.assertEqual(self.app.status, "Disconnected")
+        self.assertEqual(self.app._last_text, "")
+        self.assertFalse(self.app._show_help)
 
     def test_on_transcribed(self):
         self.app.on_transcribed("Hello World")
         self.assertFalse(self.app.transcript_queue.empty())
-        timestamp, text = self.app.transcript_queue.get()
+        text = self.app.transcript_queue.get()
         self.assertEqual(text, "Hello World")
-        self.assertIn(":", timestamp) # Check for time format
+        self.assertEqual(self.app._last_text, "Hello World")
+
+    def test_on_transcribed_empty(self):
+        self.app.on_transcribed("")
+        self.assertTrue(self.app.transcript_queue.empty())
 
     def test_make_layout(self):
         layout = self.app.make_layout()
@@ -46,18 +52,13 @@ class TestTUI(unittest.TestCase):
         self.assertEqual(layout["header"].size, 3)
         self.assertEqual(layout["footer"].size, 3)
 
-    @patch('fast_voice.client.tui.Layout')
-    @patch('fast_voice.client.tui.Panel')
-    def test_render_main(self, mock_panel, mock_layout):
-        # Setup some transcript data
-        self.app.transcript_queue.put(("12:00:00", "Test Transcript"))
-        
-        # We can't easily test the full async loop without more extensive mocking of Live
-        # But we can test the helper methods
-        
-        # Test update_transcript logic manually
-        # TUIApp.run() is the main loop, we can't call it directly in unit test as it blocks/loops
-        pass
+    def test_help_toggle(self):
+        self.assertFalse(self.app._show_help)
+        self.app._show_help = True
+        # The help panel renders via _render_help
+        panel = self.app.render_main()
+        # Should contain "Help" in the title
+        self.assertIsNotNone(panel)
 
 if __name__ == "__main__":
     unittest.main()

@@ -11,7 +11,7 @@ Fast Voice-to-Text is a split-architecture system designed for low-latency, high
     - **Device Management**: Auto-selects input devices (e.g., C920 Webcam) based on config.
     - **Signal Processing**:
         - Downmixes Stereo to Mono.
-        - Downsamples (e.g., 32kHz -> 16kHz) using `audioop`.
+        - Downsamples (e.g., 32kHz -> 16kHz) using `numpy`.
         - Normalizes Int16 to Float32 (-1.0 to 1.0).
     - **Communication**: Streams audio over WebSocket to the Server.
 - **Daemon Management**: `ensure_daemon_running` auto-launches the server if not detected.

@@ -81,7 +81,6 @@ class VoiceClient:
             
             await asyncio.sleep(duration)
             stop_event.set()
-            print("\nStopped recording. waiting for final transcription...", file=sys.stderr)
             
             await sender_task
             await asyncio.sleep(1) # Flush
