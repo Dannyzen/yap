@@ -1,0 +1,22 @@
+#!/bin/bash
+# Fast Voice-to-Text Launcher
+
+# Get script directory
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# Check if uv is installed
+if ! command -v uv &> /dev/null; then
+    # Fallback to ~/.local/bin/uv if not in PATH
+    if [ -f "$HOME/.local/bin/uv" ]; then
+        UV="$HOME/.local/bin/uv"
+    else
+        echo "Error: 'uv' is not installed. Please install it."
+        exit 1
+    fi
+else
+    UV="uv"
+fi
+
+# Run with uv
+cd "$DIR"
+exec "$UV" run main.py "$@"

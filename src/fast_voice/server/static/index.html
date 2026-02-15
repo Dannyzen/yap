@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Voice-to-Text Monitor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen flex flex-col items-center p-6">
+
+    <div class="w-full max-w-3xl">
+        <header class="flex justify-between items-center mb-8 border-b border-gray-700 pb-4">
+            <div>
+                <h1
+                    class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                    ⚡ Fast Voice-to-Text
+                </h1>
+                <p class="text-gray-400 text-sm mt-1">Real-time Transcript Monitor</p>
+            </div>
+            <div id="status"
+                class="flex items-center space-x-2 px-3 py-1 rounded-full bg-red-900/30 text-red-400 border border-red-800 transition-all duration-300">
+                <span class="w-2 h-2 rounded-full bg-current animate-pulse"></span>
+                <span class="text-xs font-bold tracking-wide uppercase">Disconnected</span>
+            </div>
+        </header>
+
+        <main class="space-y-6">
+            <div id="controls" class="text-center">
+                <button id="connectBtn" onclick="toggleConnection()"
+                    class="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-6 rounded-lg transition-all shadow-lg hover:shadow-blue-500/20 active:scale-95">
+                    Connect to Server
+                </button>
+            </div>
+
+            <div id="transcript-container"
+                class="bg-gray-800/50 rounded-xl p-6 min-h-[400px] max-h-[70vh] overflow-y-auto border border-gray-700 shadow-xl space-y-4">
+                <div class="text-center text-gray-500 italic mt-20" id="placeholder">
+                    Waiting for connection...
+                </div>
+                <!-- Transcripts appear here -->
+            </div>
+        </main>
+
+        <footer class="mt-8 text-gray-500 text-xs text-center">
+            Fast Voice-to-Text Server v1.0
+        </footer>
+    </div>
+
+    <script>
+        let ws = null;
+        const statusEl = document.getElementById('status');
+        const connectBtn = document.getElementById('connectBtn');
+        const container = document.getElementById('transcript-container');
+        const placeholder = document.getElementById('placeholder');
+        let reconnectInterval = null;
+
+        function setStatus(state) {
+            const config = {
+                disconnected: { text: "Disconnected", color: "red" },
+                connecting: { text: "Connecting...", color: "yellow" },
+                connected: { text: "Live", color: "green" }
+            };
+            const c = config[state];
+            statusEl.className = `flex items-center space-x-2 px-3 py-1 rounded-full bg-${c.color}-900/30 text-${c.color}-400 border border-${c.color}-800 transition-all duration-300`;
+            statusEl.querySelector('span:last-child').innerText = c.text;
+
+            if (state === 'connected') {
+                connectBtn.innerText = "Disconnect";
+                connectBtn.classList.replace('bg-blue-600', 'bg-red-600');
+                connectBtn.classList.replace('hover:bg-blue-500', 'hover:bg-red-500');
+                if (placeholder) placeholder.style.display = 'none';
+            } else {
+                connectBtn.innerText = "Connect to Server";
+                connectBtn.classList.replace('bg-red-600', 'bg-blue-600');
+                connectBtn.classList.replace('hover:bg-red-500', 'hover:bg-blue-500');
+            }
+        }
+
+        function toggleConnection() {
+            if (ws) {
+                ws.close();
+                ws = null;
+                setStatus('disconnected');
+            } else {
+                connect();
+            }
+        }
+
+        function connect() {
+            setStatus('connecting');
+            ws = new WebSocket("ws://localhost:9090");
+
+            ws.onopen = () => {
+                console.log("Connected");
+                // Handshake for monitor task
+                ws.send(JSON.stringify({ task: "monitor" }));
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+
+                if (data.status === "MONITOR_READY") {
+                    setStatus('connected');
+                    console.log("Monitor Ready");
+                } else if (data.segments) {
+                    // We received a transcript update
+                    // In a simpler version, just append the last segment text
+                    // But we might get full partial updates.
+                    // For visualization, let's just create a bubble for the latest completed segment
+                    // OR update the current growing segment.
+
+                    // Simple logic: If we see a completed segment?
+                    // Actually, let's just look at the last segment in the list.
+                    const lastSeg = data.segments[data.segments.length - 1];
+                    if (lastSeg) {
+                        updateTranscriptDisplay(lastSeg);
+                    }
+                }
+            };
+
+            ws.onclose = () => {
+                ws = null;
+                setStatus('disconnected');
+                console.log("Disconnected");
+            };
+
+            ws.onerror = (e) => {
+                console.error(e);
+                ws = null;
+                setStatus('disconnected');
+            };
+        }
+
+        let currentSegmentId = null;
+        let currentSegmentDiv = null;
+
+        function updateTranscriptDisplay(segment) {
+            // We use start time as a pseudo-ID to know if we are updating the same bubble or making a new one
+            // Ideally server sends IDs, but we can assume start time is unique enough per session.
+            const segId = segment.start + "-" + segment.uid; // uid not in segment object usually?
+            // Actually, server sends {uid: ..., segments: ...}
+
+            // Wait, we don't have the UID in the segment, but we have it in the message envelope?
+            // "segments" is inside "data".
+            // Let's assume sequential for now.
+
+            // If the time gap from current bubble is large, new bubble.
+            // Or just append.
+
+            const text = segment.text.trim();
+            if (!text) return;
+
+            // Rudimentary: Just create a new entry for every finalized segment?
+            // Or update the last one?
+
+            // Using a timestamp based key logic
+            const key = segment.start;
+
+            let div = document.getElementById(`seg-${key}`);
+            if (!div) {
+                div = document.createElement('div');
+                div.id = `seg-${key}`;
+                div.className = "p-3 bg-gray-700/50 rounded-lg border-l-4 border-blue-500 fade-in";
+
+                const timeStr = new Date().toLocaleTimeString([], { hour12: false });
+                div.innerHTML = `
+                    <div class="text-xs text-gray-400 mb-1 flex justify-between">
+                        <span>Speaker</span>
+                        <span>${segment.start.toFixed(1)}s</span>
+                    </div>
+                    <div class="text-lg text-gray-100 leading-relaxed segment-text"></div>
+                `;
+                container.appendChild(div);
+                container.scrollTop = container.scrollHeight;
+            }
+
+            div.querySelector('.segment-text').innerText = text;
+        }
+    </script>
+</body>
+
+</html>

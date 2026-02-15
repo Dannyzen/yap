@@ -1,0 +1,638 @@
+INFO:Config:Config reloaded from app.yaml
+INFO:root:Pre-loading model...
+INFO:httpx:HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-small/revision/main "HTTP/1.1 200 OK"
+INFO:root:Model loaded into shared memory.
+INFO:root:Single model mode currently only works with custom models.
+ERROR:websockets.server:opening handshake failed
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 138, in parse
+    request_line = yield from parse_line(read_line)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 320, in parse_line
+    line = yield from read_line(MAX_LINE_LENGTH)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/streams.py", line 46, in read_line
+    raise EOFError(f"stream ends after {p} bytes, before end of line")
+EOFError: stream ends after 0 bytes, before end of line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/server.py", line 547, in parse
+    request = yield from Request.parse(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 140, in parse
+    raise EOFError("connection closed while reading HTTP request line") from exc
+EOFError: connection closed while reading HTTP request line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/sync/server.py", line 592, in conn_handler
+    connection.handshake(
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/sync/server.py", line 189, in handshake
+    raise self.protocol.handshake_exc
+websockets.exceptions.InvalidMessage: did not receive a valid HTTP request
+INFO:websockets.server:connection open
+INFO:root:New client connected
+INFO:root:Using Device=cuda with precision float16
+INFO:root:Loading model: small
+INFO:httpx:HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-small/revision/main "HTTP/1.1 200 OK"
+INFO:root:Running faster_whisper backend.
+INFO:root:Connection closed by client
+INFO:root:Cleaning up.
+INFO:root:Exiting speech to text thread
+INFO:websockets.server:connection open
+INFO:root:New client connected
+INFO:root:Using Device=cuda with precision float16
+INFO:root:Loading model: small
+INFO:httpx:HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-small/revision/main "HTTP/1.1 200 OK"
+INFO:root:Running faster_whisper backend.
+INFO:faster_whisper:Processing audio with duration 00:02.304
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:10.240
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:11.000
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:11.000
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:11.000
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:11.000
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:11.000
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:11.000
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:11.000
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:11.000
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:11.000
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:11.000
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:11.000
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:root:Connection closed by client
+INFO:root:Cleaning up.
+INFO:root:Exiting speech to text thread
+ERROR:websockets.server:opening handshake failed
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 138, in parse
+    request_line = yield from parse_line(read_line)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 320, in parse_line
+    line = yield from read_line(MAX_LINE_LENGTH)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/streams.py", line 46, in read_line
+    raise EOFError(f"stream ends after {p} bytes, before end of line")
+EOFError: stream ends after 0 bytes, before end of line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/server.py", line 547, in parse
+    request = yield from Request.parse(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 140, in parse
+    raise EOFError("connection closed while reading HTTP request line") from exc
+EOFError: connection closed while reading HTTP request line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/sync/server.py", line 592, in conn_handler
+    connection.handshake(
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/sync/server.py", line 189, in handshake
+    raise self.protocol.handshake_exc
+websockets.exceptions.InvalidMessage: did not receive a valid HTTP request
+INFO:websockets.server:connection open
+INFO:root:New client connected
+INFO:root:Using Device=cuda with precision float16
+INFO:root:Loading model: small
+INFO:httpx:HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-small/revision/main "HTTP/1.1 200 OK"
+INFO:root:Running faster_whisper backend.
+INFO:faster_whisper:Processing audio with duration 00:01.024
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.152
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.280
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.408
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.472
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.600
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.064
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.192
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.384
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.576
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.832
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.024
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.280
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.472
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.728
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.984
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.176
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.432
+INFO:faster_whisper:VAD filter removed 00:01.656 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.424
+INFO:faster_whisper:VAD filter removed 00:01.928 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.552
+INFO:faster_whisper:VAD filter removed 00:02.056 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.680
+INFO:faster_whisper:VAD filter removed 00:02.184 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.808
+INFO:faster_whisper:VAD filter removed 00:02.312 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.936
+INFO:faster_whisper:VAD filter removed 00:02.440 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.064
+INFO:faster_whisper:VAD filter removed 00:02.568 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.192
+INFO:faster_whisper:VAD filter removed 00:02.696 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.320
+INFO:faster_whisper:VAD filter removed 00:02.824 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.448
+INFO:faster_whisper:VAD filter removed 00:02.952 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.576
+INFO:faster_whisper:VAD filter removed 00:03.080 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.704
+INFO:faster_whisper:VAD filter removed 00:03.208 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.832
+INFO:faster_whisper:VAD filter removed 00:03.336 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.960
+INFO:faster_whisper:VAD filter removed 00:03.464 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.088
+INFO:faster_whisper:VAD filter removed 00:03.592 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.216
+INFO:faster_whisper:VAD filter removed 00:03.720 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.344
+INFO:faster_whisper:VAD filter removed 00:03.848 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.472
+INFO:faster_whisper:VAD filter removed 00:03.976 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.600
+INFO:faster_whisper:VAD filter removed 00:04.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.728
+INFO:faster_whisper:VAD filter removed 00:04.232 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.856
+INFO:faster_whisper:VAD filter removed 00:04.360 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.984
+INFO:faster_whisper:VAD filter removed 00:04.488 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.112
+INFO:faster_whisper:VAD filter removed 00:04.616 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.240
+INFO:faster_whisper:VAD filter removed 00:04.744 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.368
+INFO:faster_whisper:VAD filter removed 00:04.872 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.496
+INFO:faster_whisper:VAD filter removed 00:05.000 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.624
+INFO:faster_whisper:VAD filter removed 00:05.128 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.752
+INFO:faster_whisper:VAD filter removed 00:05.256 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.880
+INFO:faster_whisper:VAD filter removed 00:05.384 of audio
+INFO:faster_whisper:Processing audio with duration 00:06.008
+INFO:faster_whisper:VAD filter removed 00:05.512 of audio
+INFO:faster_whisper:Processing audio with duration 00:06.200
+INFO:faster_whisper:VAD filter removed 00:05.704 of audio
+INFO:faster_whisper:Processing audio with duration 00:06.328
+INFO:faster_whisper:VAD filter removed 00:05.832 of audio
+INFO:faster_whisper:Processing audio with duration 00:06.456
+INFO:faster_whisper:VAD filter removed 00:05.960 of audio
+INFO:faster_whisper:Processing audio with duration 00:06.584
+INFO:faster_whisper:VAD filter removed 00:06.088 of audio
+INFO:faster_whisper:Processing audio with duration 00:06.712
+INFO:faster_whisper:VAD filter removed 00:06.216 of audio
+INFO:faster_whisper:Processing audio with duration 00:06.840
+INFO:faster_whisper:VAD filter removed 00:06.344 of audio
+INFO:faster_whisper:Processing audio with duration 00:07.032
+INFO:faster_whisper:VAD filter removed 00:06.536 of audio
+INFO:faster_whisper:Processing audio with duration 00:07.160
+INFO:faster_whisper:VAD filter removed 00:06.664 of audio
+INFO:faster_whisper:Processing audio with duration 00:07.288
+INFO:faster_whisper:VAD filter removed 00:06.792 of audio
+INFO:faster_whisper:Processing audio with duration 00:07.416
+INFO:faster_whisper:VAD filter removed 00:06.920 of audio
+INFO:faster_whisper:Processing audio with duration 00:07.544
+INFO:faster_whisper:VAD filter removed 00:07.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:07.736
+INFO:faster_whisper:VAD filter removed 00:07.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:07.864
+INFO:faster_whisper:VAD filter removed 00:07.368 of audio
+INFO:faster_whisper:Processing audio with duration 00:07.992
+INFO:faster_whisper:VAD filter removed 00:07.496 of audio
+INFO:faster_whisper:Processing audio with duration 00:08.120
+INFO:faster_whisper:VAD filter removed 00:07.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:08.248
+INFO:faster_whisper:VAD filter removed 00:07.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:08.376
+INFO:faster_whisper:VAD filter removed 00:07.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:08.504
+INFO:faster_whisper:VAD filter removed 00:07.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:08.696
+INFO:faster_whisper:VAD filter removed 00:07.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:08.824
+INFO:faster_whisper:VAD filter removed 00:07.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:09.080
+INFO:faster_whisper:VAD filter removed 00:07.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:09.272
+INFO:faster_whisper:VAD filter removed 00:07.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:09.464
+INFO:faster_whisper:VAD filter removed 00:07.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:09.784
+INFO:faster_whisper:VAD filter removed 00:07.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:10.040
+INFO:faster_whisper:VAD filter removed 00:07.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:10.296
+INFO:faster_whisper:VAD filter removed 00:07.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:10.552
+INFO:faster_whisper:VAD filter removed 00:07.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:10.872
+INFO:faster_whisper:VAD filter removed 00:07.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:11.128
+INFO:faster_whisper:VAD filter removed 00:07.104 of audio
+INFO:faster_whisper:Processing audio with duration 00:11.448
+INFO:faster_whisper:VAD filter removed 00:08.776 of audio
+INFO:faster_whisper:Processing audio with duration 00:11.704
+INFO:faster_whisper:VAD filter removed 00:09.032 of audio
+INFO:faster_whisper:Processing audio with duration 00:12.024
+INFO:faster_whisper:VAD filter removed 00:09.352 of audio
+INFO:faster_whisper:Processing audio with duration 00:12.280
+INFO:faster_whisper:VAD filter removed 00:09.608 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.180
+INFO:faster_whisper:VAD filter removed 00:03.180 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.024
+INFO:faster_whisper:VAD filter removed 00:01.024 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.088
+INFO:faster_whisper:VAD filter removed 00:01.088 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.024
+INFO:faster_whisper:VAD filter removed 00:01.024 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.024
+INFO:faster_whisper:VAD filter removed 00:01.024 of audio
+INFO:root:Connection closed by client
+INFO:root:Cleaning up.
+INFO:root:Exiting speech to text thread
+ERROR:websockets.server:opening handshake failed
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 138, in parse
+    request_line = yield from parse_line(read_line)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 320, in parse_line
+    line = yield from read_line(MAX_LINE_LENGTH)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/streams.py", line 46, in read_line
+    raise EOFError(f"stream ends after {p} bytes, before end of line")
+EOFError: stream ends after 0 bytes, before end of line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/server.py", line 547, in parse
+    request = yield from Request.parse(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 140, in parse
+    raise EOFError("connection closed while reading HTTP request line") from exc
+EOFError: connection closed while reading HTTP request line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/sync/server.py", line 592, in conn_handler
+    connection.handshake(
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/sync/server.py", line 189, in handshake
+    raise self.protocol.handshake_exc
+websockets.exceptions.InvalidMessage: did not receive a valid HTTP request
+INFO:websockets.server:connection open
+INFO:root:New client connected
+INFO:root:Using Device=cuda with precision float16
+INFO:root:Loading model: small
+INFO:httpx:HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-small/revision/main "HTTP/1.1 200 OK"
+INFO:root:Running faster_whisper backend.
+INFO:faster_whisper:Processing audio with duration 00:01.024
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.088
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.216
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.280
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.408
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.600
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.728
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.856
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.984
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.176
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.304
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.560
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.752
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.008
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.264
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.520
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.712
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.968
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.224
+INFO:faster_whisper:VAD filter removed 00:00.240 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.480
+INFO:faster_whisper:VAD filter removed 00:01.856 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.736
+INFO:faster_whisper:VAD filter removed 00:02.112 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.752
+INFO:faster_whisper:VAD filter removed 00:02.192 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.648
+INFO:faster_whisper:VAD filter removed 00:03.088 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.056
+INFO:faster_whisper:VAD filter removed 00:04.496 of audio
+INFO:faster_whisper:Processing audio with duration 00:06.272
+INFO:faster_whisper:VAD filter removed 00:05.712 of audio
+INFO:faster_whisper:Processing audio with duration 00:08.064
+INFO:faster_whisper:VAD filter removed 00:07.504 of audio
+INFO:faster_whisper:Processing audio with duration 00:09.024
+INFO:faster_whisper:VAD filter removed 00:08.464 of audio
+INFO:faster_whisper:Processing audio with duration 00:10.048
+INFO:faster_whisper:VAD filter removed 00:09.488 of audio
+INFO:faster_whisper:Processing audio with duration 00:11.840
+INFO:faster_whisper:VAD filter removed 00:11.280 of audio
+INFO:faster_whisper:Processing audio with duration 00:13.312
+INFO:faster_whisper:VAD filter removed 00:12.752 of audio
+INFO:faster_whisper:Processing audio with duration 00:14.656
+INFO:faster_whisper:VAD filter removed 00:14.096 of audio
+INFO:faster_whisper:Processing audio with duration 00:15.872
+INFO:faster_whisper:VAD filter removed 00:15.312 of audio
+INFO:faster_whisper:Processing audio with duration 00:17.088
+INFO:faster_whisper:VAD filter removed 00:16.528 of audio
+INFO:faster_whisper:Processing audio with duration 00:17.472
+INFO:faster_whisper:VAD filter removed 00:16.912 of audio
+INFO:root:Connection closed by client
+INFO:root:Cleaning up.
+ERROR:root:[ERROR]: Sending data to client: received 1000 (OK); then sent 1000 (OK)
+INFO:root:Exiting speech to text thread
+ERROR:websockets.server:opening handshake failed
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 138, in parse
+    request_line = yield from parse_line(read_line)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 320, in parse_line
+    line = yield from read_line(MAX_LINE_LENGTH)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/streams.py", line 46, in read_line
+    raise EOFError(f"stream ends after {p} bytes, before end of line")
+EOFError: stream ends after 0 bytes, before end of line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/server.py", line 547, in parse
+    request = yield from Request.parse(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 140, in parse
+    raise EOFError("connection closed while reading HTTP request line") from exc
+EOFError: connection closed while reading HTTP request line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/sync/server.py", line 592, in conn_handler
+    connection.handshake(
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/sync/server.py", line 189, in handshake
+    raise self.protocol.handshake_exc
+websockets.exceptions.InvalidMessage: did not receive a valid HTTP request
+INFO:websockets.server:connection open
+INFO:root:New client connected
+INFO:root:Using Device=cuda with precision float16
+INFO:root:Loading model: small
+INFO:httpx:HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-small/revision/main "HTTP/1.1 200 OK"
+INFO:root:Running faster_whisper backend.
+INFO:faster_whisper:Processing audio with duration 00:01.024
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.152
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.344
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.472
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.664
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.856
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.984
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.112
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.368
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.560
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.816
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.008
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.264
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.520
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.776
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.968
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.224
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.480
+INFO:faster_whisper:VAD filter removed 00:01.888 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.622
+INFO:faster_whisper:VAD filter removed 00:01.568 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.750
+INFO:faster_whisper:VAD filter removed 00:01.568 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.878
+INFO:faster_whisper:VAD filter removed 00:01.568 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.070
+INFO:faster_whisper:VAD filter removed 00:01.568 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.262
+INFO:faster_whisper:VAD filter removed 00:01.568 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.454
+INFO:faster_whisper:VAD filter removed 00:01.568 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.582
+INFO:faster_whisper:VAD filter removed 00:01.568 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.774
+INFO:faster_whisper:VAD filter removed 00:01.568 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.966
+INFO:faster_whisper:VAD filter removed 00:01.568 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.222
+INFO:faster_whisper:VAD filter removed 00:01.568 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.414
+INFO:faster_whisper:VAD filter removed 00:01.568 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.606
+INFO:faster_whisper:VAD filter removed 00:01.568 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.862
+INFO:faster_whisper:VAD filter removed 00:01.568 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.054
+INFO:faster_whisper:VAD filter removed 00:03.310 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.246
+INFO:faster_whisper:VAD filter removed 00:03.502 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.502
+INFO:faster_whisper:VAD filter removed 00:03.758 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.694
+INFO:faster_whisper:VAD filter removed 00:03.950 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.316
+INFO:faster_whisper:VAD filter removed 00:02.316 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.024
+INFO:faster_whisper:VAD filter removed 00:01.024 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.024
+INFO:faster_whisper:VAD filter removed 00:01.024 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.088
+INFO:faster_whisper:VAD filter removed 00:01.088 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.024
+INFO:faster_whisper:VAD filter removed 00:01.024 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.088
+INFO:faster_whisper:VAD filter removed 00:01.088 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.024
+INFO:faster_whisper:VAD filter removed 00:01.024 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.088
+INFO:faster_whisper:VAD filter removed 00:01.088 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.088
+INFO:faster_whisper:VAD filter removed 00:01.088 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.024
+INFO:faster_whisper:VAD filter removed 00:01.024 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.088
+INFO:faster_whisper:VAD filter removed 00:01.088 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.024
+INFO:faster_whisper:VAD filter removed 00:01.024 of audio
+INFO:root:Connection closed by client
+INFO:root:Cleaning up.
+INFO:root:Exiting speech to text thread
+ERROR:websockets.server:opening handshake failed
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 138, in parse
+    request_line = yield from parse_line(read_line)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 320, in parse_line
+    line = yield from read_line(MAX_LINE_LENGTH)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/streams.py", line 46, in read_line
+    raise EOFError(f"stream ends after {p} bytes, before end of line")
+EOFError: stream ends after 0 bytes, before end of line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/server.py", line 547, in parse
+    request = yield from Request.parse(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 140, in parse
+    raise EOFError("connection closed while reading HTTP request line") from exc
+EOFError: connection closed while reading HTTP request line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/sync/server.py", line 592, in conn_handler
+    connection.handshake(
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/sync/server.py", line 189, in handshake
+    raise self.protocol.handshake_exc
+websockets.exceptions.InvalidMessage: did not receive a valid HTTP request
+INFO:websockets.server:connection open
+INFO:root:New client connected
+INFO:root:Using Device=cuda with precision float16
+INFO:root:Loading model: small
+INFO:httpx:HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-small/revision/main "HTTP/1.1 200 OK"
+INFO:root:Running faster_whisper backend.
+INFO:faster_whisper:Processing audio with duration 00:01.024
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.152
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.344
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.408
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.664
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.728
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.856
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.984
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.112
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.368
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.560
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.688
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:02.880
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.072
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.200
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.392
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.520
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.712
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:03.968
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.224
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.480
+INFO:faster_whisper:VAD filter removed 00:00.176 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.736
+INFO:faster_whisper:VAD filter removed 00:01.920 of audio
+INFO:faster_whisper:Processing audio with duration 00:04.864
+INFO:faster_whisper:VAD filter removed 00:02.048 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.120
+INFO:faster_whisper:VAD filter removed 00:02.304 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.440
+INFO:faster_whisper:VAD filter removed 00:02.624 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.696
+INFO:faster_whisper:VAD filter removed 00:02.880 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.952
+INFO:faster_whisper:VAD filter removed 00:03.136 of audio
+INFO:faster_whisper:Processing audio with duration 00:06.208
+INFO:faster_whisper:VAD filter removed 00:03.392 of audio
+INFO:faster_whisper:Processing audio with duration 00:06.528
+INFO:faster_whisper:VAD filter removed 00:03.712 of audio
+INFO:faster_whisper:Processing audio with duration 00:06.784
+INFO:faster_whisper:VAD filter removed 00:03.968 of audio
+INFO:faster_whisper:Processing audio with duration 00:07.040
+INFO:faster_whisper:VAD filter removed 00:04.224 of audio
+INFO:faster_whisper:Processing audio with duration 00:07.360
+INFO:faster_whisper:VAD filter removed 00:04.544 of audio
+INFO:faster_whisper:Processing audio with duration 00:07.616
+INFO:faster_whisper:VAD filter removed 00:04.800 of audio
+INFO:faster_whisper:Processing audio with duration 00:05.372
+INFO:faster_whisper:VAD filter removed 00:05.372 of audio
+INFO:faster_whisper:Processing audio with duration 00:01.024
+INFO:faster_whisper:VAD filter removed 00:01.024 of audio
+INFO:root:Connection closed by client
+INFO:root:Cleaning up.
+INFO:root:Exiting speech to text thread

@@ -1,0 +1,24 @@
+1
+00:00:08,448 --> 00:00:10,288
+ Hey there, my name's Danny, and I'm talking.
+
+2
+00:00:10,288 --> 00:00:12,688
+ And I'm talking, and I'm talking, and I'm talking.
+
+3
+00:00:12,688 --> 00:00:14,247
+ Hey there, my name's Danny and I'm talking,
+
+4
+00:00:14,247 --> 00:00:20,257
+ and I'm talking, I'm talking, I'm talking.
+
+5
+00:00:20,257 --> 00:00:21,617
+ Hey there, my name Ian, I'm talking,
+
+6
+00:00:21,617 --> 00:00:25,007
+ Hey there, my name is Danny, I'm talking.
+

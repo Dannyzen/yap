@@ -1,0 +1,136 @@
+asyncapi: '3.0.0'
+info:
+  title: WhisperLive Streaming Protocol
+  version: '1.0.0'
+  description: |
+    Real-time speech-to-text streaming protocol using WebSockets.
+    Clients connect, send a configuration JSON, and then stream binary audio.
+    The server responds with real-time JSON transcription segments.
+
+servers:
+  local:
+    host: localhost:9090
+    protocol: ws
+    description: Local development server
+
+channels:
+  transcription:
+    address: /
+    description: Main WebSocket endpoint for transcription.
+    messages:
+      handshake:
+        $ref: '#/components/messages/Handshake'
+      audioFrame:
+        $ref: '#/components/messages/AudioFrame'
+      serverReady:
+        $ref: '#/components/messages/ServerReady'
+      transcription:
+        $ref: '#/components/messages/Transcription'
+      error:
+        $ref: '#/components/messages/Error'
+
+operations:
+  clientSend:
+    action: send
+    channel: transcription
+    summary: Client sends config and audio.
+    messages:
+      - $ref: '#/components/messages/Handshake'
+      - $ref: '#/components/messages/AudioFrame'
+
+  clientReceive:
+    action: receive
+    channel: transcription
+    summary: Client receives transcription updates.
+    messages:
+      - $ref: '#/components/messages/ServerReady'
+      - $ref: '#/components/messages/Transcription'
+      - $ref: '#/components/messages/Error'
+
+components:
+  messages:
+    Handshake:
+      summary: Initial configuration message.
+      description: Sent immediately after connection open.
+      payload:
+        type: object
+        required: [uid, language, task, model]
+        properties:
+          uid:
+            type: string
+            description: Unique client identifier (UUID).
+          language:
+            type: string
+            description: Language code (e.g., "en") or null for auto-detect.
+          task:
+            type: string
+            enum: [transcribe, translate]
+          model:
+            type: string
+            description: Model size (e.g., "small", "base") or path.
+          use_vad:
+            type: boolean
+            default: true
+          initial_prompt:
+            type: string
+            description: Optional context/prompt for the model.
+    
+    AudioFrame:
+      summary: Raw audio data.
+      description: Continuous stream of audio bytes.
+      contentType: application/octet-stream
+      payload:
+        type: string
+        format: binary
+        description: Raw audio samples (usually resampled to 16kHz float32 or int16).
+
+    ServerReady:
+      summary: Acknowledgment that server is ready.
+      payload:
+        type: object
+        properties:
+          uid:
+            type: string
+          message:
+            type: string
+            enum: ["SERVER_READY"]
+          backend:
+            type: string
+    
+    Transcription:
+      summary: Transcription update.
+      payload:
+        type: object
+        properties:
+          uid:
+            type: string
+          segments:
+            type: array
+            items:
+              type: object
+              properties:
+                start:
+                  type: string
+                  description: Start time in seconds (as string float "0.000").
+                end:
+                  type: string
+                  description: End time in seconds.
+                text:
+                  type: string
+                  description: Transcribed text.
+                completed:
+                  type: boolean
+                  description: True if this segment is finalized.
+
+    Error:
+      summary: Error message.
+      payload:
+        type: object
+        properties:
+          uid:
+            type: string
+          status:
+            type: string
+            enum: ["ERROR"]
+          message:
+            type: string

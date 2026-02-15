@@ -1,0 +1,130 @@
+INFO:Config:Config reloaded from app.yaml
+INFO:root:[Warmup] Loading Model: small on cuda (float16)...
+INFO:httpx:HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-small/revision/main "HTTP/1.1 200 OK"
+INFO:root:[Warmup] Model loaded successfully.
+INFO:root:Single model mode currently only works with custom models.
+ERROR:websockets.server:opening handshake failed
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 138, in parse
+    request_line = yield from parse_line(read_line)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 320, in parse_line
+    line = yield from read_line(MAX_LINE_LENGTH)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/streams.py", line 46, in read_line
+    raise EOFError(f"stream ends after {p} bytes, before end of line")
+EOFError: stream ends after 0 bytes, before end of line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/server.py", line 547, in parse
+    request = yield from Request.parse(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 140, in parse
+    raise EOFError("connection closed while reading HTTP request line") from exc
+EOFError: connection closed while reading HTTP request line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/sync/server.py", line 592, in conn_handler
+    connection.handshake(
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/sync/server.py", line 189, in handshake
+    raise self.protocol.handshake_exc
+websockets.exceptions.InvalidMessage: did not receive a valid HTTP request
+INFO:websockets.server:connection open
+INFO:root:New monitor connected
+ERROR:websockets.server:opening handshake failed
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 138, in parse
+    request_line = yield from parse_line(read_line)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 320, in parse_line
+    line = yield from read_line(MAX_LINE_LENGTH)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/streams.py", line 46, in read_line
+    raise EOFError(f"stream ends after {p} bytes, before end of line")
+EOFError: stream ends after 0 bytes, before end of line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/server.py", line 547, in parse
+    request = yield from Request.parse(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/http11.py", line 140, in parse
+    raise EOFError("connection closed while reading HTTP request line") from exc
+EOFError: connection closed while reading HTTP request line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/sync/server.py", line 592, in conn_handler
+    connection.handshake(
+  File "/home/danny/testing/fast-voice/.venv/lib/python3.11/site-packages/websockets/sync/server.py", line 189, in handshake
+    raise self.protocol.handshake_exc
+websockets.exceptions.InvalidMessage: did not receive a valid HTTP request
+INFO:websockets.server:connection open
+INFO:root:New client connected
+INFO:root:Using Device=cuda with precision float16
+INFO:root:Loading model: small
+INFO:httpx:HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-small/revision/main "HTTP/1.1 200 OK"
+INFO:root:Running faster_whisper backend.
+INFO:faster_whisper:Processing audio with duration 00:01.000
+INFO:faster_whisper:Processing audio with duration 00:01.400
+INFO:faster_whisper:Processing audio with duration 00:01.500
+INFO:faster_whisper:Processing audio with duration 00:01.600
+INFO:faster_whisper:Processing audio with duration 00:01.700
+INFO:faster_whisper:Processing audio with duration 00:01.800
+INFO:faster_whisper:Processing audio with duration 00:01.800
+INFO:faster_whisper:Processing audio with duration 00:01.900
+INFO:faster_whisper:Processing audio with duration 00:02.000
+INFO:faster_whisper:Processing audio with duration 00:02.100
+INFO:faster_whisper:Processing audio with duration 00:02.200
+INFO:faster_whisper:Processing audio with duration 00:02.300
+INFO:faster_whisper:Processing audio with duration 00:02.400
+INFO:faster_whisper:Processing audio with duration 00:02.400
+INFO:faster_whisper:Processing audio with duration 00:02.500
+INFO:faster_whisper:Processing audio with duration 00:02.600
+INFO:faster_whisper:Processing audio with duration 00:02.700
+INFO:faster_whisper:Processing audio with duration 00:02.800
+INFO:faster_whisper:Processing audio with duration 00:02.900
+INFO:faster_whisper:Processing audio with duration 00:02.900
+INFO:faster_whisper:Processing audio with duration 00:03.000
+INFO:faster_whisper:Processing audio with duration 00:03.100
+INFO:faster_whisper:Processing audio with duration 00:03.200
+INFO:faster_whisper:Processing audio with duration 00:03.300
+INFO:faster_whisper:Processing audio with duration 00:03.400
+INFO:faster_whisper:Processing audio with duration 00:03.500
+INFO:faster_whisper:Processing audio with duration 00:03.600
+INFO:faster_whisper:Processing audio with duration 00:03.700
+INFO:faster_whisper:Processing audio with duration 00:03.800
+INFO:faster_whisper:Processing audio with duration 00:03.900
+INFO:faster_whisper:Processing audio with duration 00:04.000
+INFO:faster_whisper:Processing audio with duration 00:04.000
+INFO:faster_whisper:Processing audio with duration 00:04.100
+INFO:faster_whisper:Processing audio with duration 00:04.200
+INFO:faster_whisper:Processing audio with duration 00:04.400
+INFO:faster_whisper:Processing audio with duration 00:04.500
+INFO:faster_whisper:Processing audio with duration 00:04.600
+INFO:faster_whisper:Processing audio with duration 00:04.700
+INFO:faster_whisper:Processing audio with duration 00:04.700
+INFO:faster_whisper:Processing audio with duration 00:04.800
+INFO:faster_whisper:Processing audio with duration 00:04.900
+INFO:faster_whisper:Processing audio with duration 00:04.900
+INFO:faster_whisper:Processing audio with duration 00:04.900
+INFO:faster_whisper:Processing audio with duration 00:04.900
+INFO:faster_whisper:Processing audio with duration 00:04.900
+INFO:faster_whisper:Processing audio with duration 00:04.900
+INFO:faster_whisper:Processing audio with duration 00:04.900
+INFO:faster_whisper:Processing audio with duration 00:04.900
+INFO:faster_whisper:Processing audio with duration 00:04.900
+INFO:faster_whisper:Processing audio with duration 00:04.900
+INFO:faster_whisper:Processing audio with duration 00:04.900
+INFO:faster_whisper:Processing audio with duration 00:04.900
+INFO:faster_whisper:Processing audio with duration 00:04.900
+INFO:root:Connection closed by client
+INFO:root:Cleaning up.
+INFO:root:Exiting speech to text thread
+INFO:root:Monitor disconnected

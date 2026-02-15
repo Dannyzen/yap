@@ -1,0 +1,64 @@
+# Fast Voice-to-Text Configuration
+# This file is watched; changes are applied every 2 seconds where possible.
+
+app:
+  # The name of the application instance
+  name: "Fast Voice-to-Text"
+  # Logging verbosity: "DEBUG", "INFO", "WARNING", "ERROR"
+  log_level: "INFO"
+
+profiles:
+  default:
+    restore_punctuation: true
+  code:
+    restore_punctuation: false
+    lowercase: true
+
+model:
+  # Whisper model size to load.
+  # Options: "tiny", "base", "small", "medium", "large-v2", "large-v3"
+  size: "small"
+  
+  # Compute type for inference. 
+  # Options: "float16" (GPU), "int8_float16" (GPU hybrid), "int8" (CPU/Small GPU)
+  compute_type: "int8"
+  
+  # Language code (e.g., "en", "es", "fr"). 
+  # Leave empty or null for auto-detection (adds latency).
+  language: "en"
+
+audio:
+  # Input device index (integer) or "default".
+  # Auto-detected Webcam (HD Pro Webcam C920) is index 6
+  input_device: 6
+  
+  # Target Sample Rate in Hz for the server (Whisper expects 16000).
+  # Note: Clients may capture at higher rates (e.g. 32k/48k) to satisfy hardware
+  # but must downsample to this rate before sending.
+  sample_rate: 16000
+  
+  # Voice Activity Detection (VAD) setting.
+  use_vad: true
+
+output:
+  # Path to the named pipe for external consumption.
+  pipe_path: "transcript.pipe"
+  
+
+  
+  # Hotkey to copy the current transcript to clipboard.
+  copy_hotkey: "c"
+
+server:
+  # Local server settings
+  host: "0.0.0.0"
+  port: 9090
+
+daemon:
+  # Auto-start the daemon if not running
+  auto_start: true
+  # Command to launch daemon (list of strings)
+  command:
+    - "uv"
+    - "run"
+    - "fast-voice-server"
