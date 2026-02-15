@@ -49,27 +49,16 @@
 
         <main class="space-y-6">
             <div id="controls" class="flex flex-col items-center gap-4">
-                <div class="flex bg-gray-800 p-1 rounded-lg">
-                    <button id="modeMonitor" onclick="setMode('monitor')"
-                        class="px-4 py-2 rounded-md text-sm font-medium transition-all bg-gray-700 text-white shadow-sm">
-                        📺 Monitor Only
-                    </button>
-                    <button id="modeMic" onclick="setMode('mic')"
-                        class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-400 hover:text-white">
-                        🎤 Microphone Input
-                    </button>
-                </div>
-
                 <button id="connectBtn" onclick="toggleConnection()"
                     class="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-8 rounded-lg transition-all shadow-lg hover:shadow-blue-500/20 active:scale-95 w-full max-w-xs flex justify-center items-center gap-2">
-                    Connect
+                    Start Microphone
                 </button>
             </div>
 
             <div id="transcript-container"
                 class="bg-gray-800/50 rounded-xl p-6 min-h-[400px] max-h-[70vh] overflow-y-auto border border-gray-700 shadow-xl space-y-4 relative">
                 <div class="text-center text-gray-500 italic mt-20" id="placeholder">
-                    Select a mode and connect...
+                    Click Start to begin transcription...
                 </div>
                 <!-- Transcripts appear here -->
             </div>
@@ -85,55 +74,33 @@
         let audioCtx = null;
         let mediaStream = null;
         let scriptProcessor = null;
-        let currentMode = 'monitor'; // 'monitor' or 'mic'
 
         const statusEl = document.getElementById('status');
         const connectBtn = document.getElementById('connectBtn');
         const container = document.getElementById('transcript-container');
         const placeholder = document.getElementById('placeholder');
 
-        function setMode(mode) {
-            if (ws) {
-                alert("Please disconnect before changing modes.");
-                return;
-            }
-            currentMode = mode;
-
-            // Update UI tabs
-            if (mode === 'monitor') {
-                document.getElementById('modeMonitor').className = "px-4 py-2 rounded-md text-sm font-medium transition-all bg-gray-700 text-white shadow-sm";
-                document.getElementById('modeMic').className = "px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-400 hover:text-white";
-                connectBtn.classList.remove('bg-red-600', 'hover:bg-red-500');
-                connectBtn.classList.add('bg-blue-600', 'hover:bg-blue-500');
-                connectBtn.innerHTML = "Connect Monitor";
-            } else {
-                document.getElementById('modeMic').className = "px-4 py-2 rounded-md text-sm font-medium transition-all bg-red-700 text-white shadow-sm";
-                document.getElementById('modeMonitor').className = "px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-400 hover:text-white";
-                connectBtn.classList.remove('bg-blue-600', 'hover:bg-blue-500');
-                connectBtn.classList.add('bg-red-600', 'hover:bg-red-500');
-                connectBtn.innerHTML = "Start Microphone";
-            }
-        }
-
         function setStatus(state) {
             const config = {
                 disconnected: { text: "Disconnected", color: "red" },
                 connecting: { text: "Connecting...", color: "yellow" },
-                connected: { text: currentMode === 'mic' ? "Recording" : "Live", color: "green" }
+                connected: { text: "Recording", color: "green" }
             };
             const c = config[state];
             statusEl.className = `flex items-center space-x-2 px-3 py-1 rounded-full bg-${c.color}-900/30 text-${c.color}-400 border border-${c.color}-800 transition-all duration-300`;
             statusEl.querySelector('span:last-child').innerText = c.text;
 
             if (state === 'connected') {
-                connectBtn.innerText = "Disconnect";
-                if (currentMode === 'mic') {
-                    connectBtn.classList.add('animate-pulse');
-                }
+                connectBtn.innerText = "Stop Microphone";
+                connectBtn.classList.add('animate-pulse');
+                connectBtn.classList.replace('bg-blue-600', 'bg-red-600');
+                connectBtn.classList.replace('hover:bg-blue-500', 'hover:bg-red-500');
                 if (placeholder) placeholder.style.display = 'none';
             } else {
-                connectBtn.innerText = currentMode === 'mic' ? "Start Microphone" : "Connect Monitor";
+                connectBtn.innerText = "Start Microphone";
                 connectBtn.classList.remove('animate-pulse');
+                connectBtn.classList.replace('bg-red-600', 'bg-blue-600');
+                connectBtn.classList.replace('hover:bg-red-500', 'hover:bg-blue-500');
             }
         }
 
@@ -148,46 +115,36 @@
         async function startConnection() {
             setStatus('connecting');
 
-            if (currentMode === 'mic') {
-                try {
-                    await startAudioCapture();
-                } catch (e) {
-                    console.error("Audio capture failed:", e);
-                    alert("Could not access microphone: " + e.message);
-                    setStatus('disconnected');
-                    return;
-                }
+            try {
+                await startAudioCapture();
+            } catch (e) {
+                console.error("Audio capture failed:", e);
+                alert("Could not access microphone: " + e.message);
+                setStatus('disconnected');
+                return;
             }
 
             ws = new WebSocket("ws://localhost:9090");
 
             ws.onopen = () => {
                 console.log("Connected");
-
-                if (currentMode === 'monitor') {
-                    ws.send(JSON.stringify({ task: "monitor" }));
-                } else {
-                    // Send Handshake for Transcription
-                    const handshake = {
-                        uid: generateUUID(),
-                        language: "en",
-                        task: "transcribe",
-                        model: "small",
-                        use_vad: true
-                    };
-                    ws.send(JSON.stringify(handshake));
-                }
+                // Send Handshake for Transcription
+                const handshake = {
+                    uid: generateUUID(),
+                    language: "en",
+                    task: "transcribe",
+                    model: "small",
+                    use_vad: true
+                };
+                ws.send(JSON.stringify(handshake));
             };
 
             ws.onmessage = (event) => {
                 try {
                     const data = JSON.parse(event.data);
 
-                    if (data.status === "MONITOR_READY") {
-                        handleReady("Listening for active clients...");
-                    } else if (data.message === "SERVER_READY") {
+                    if (data.message === "SERVER_READY") {
                         handleReady("Microphone Active - Speak Now!");
-                        // Start streaming audio
                     } else if (data.segments) {
                         const uid = data.uid || "local";
                         if (data.segments.length > 0) {
