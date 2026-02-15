@@ -34,6 +34,9 @@ For a premium terminal experience with live scrolling and status indicators:
 ```bash
 uv run fast-voice-client
 ```
+- **Live Updates**: See text appear instantly.
+- **Shortcuts**: Press `c` to copy, `?` for help.
+- **Clean Output**: Pipes only final text to stdout on exit.
 
 ### 3. Browser Monitor
 View your transcripts in real-time on any device (phone, tablet, laptop) by opening the monitor page.
@@ -112,3 +115,6 @@ await client.run(duration=5)
 # Run Unit Tests
 uv run python -m unittest tests/test_client.py
 ```
+
+## Agent Guidelines
+See [`AGENT.md`](AGENT.md) for architectural details and contribution workflows.

@@ -1,33 +1,36 @@
-# QA Review
+# QA Review Report
 
-## Overview
-This document summarizes the Quality Assurance review for the Fast Voice-to-Text application, specifically focusing on the migration to the `WhisperLive` backend.
+**Date**: 2026-02-15
+**Reviewer**: Antigravity (QA Engineer, Code Quality Manager)
+**Status**: PASSED (12/12 Tests)
 
-## Test Results
+## 1. Code Quality Pass
+- **Linting**:
+  - Removed deprecated comments (e.g., `# import audioop`) from `src/fast_voice/client/core.py`.
+  - Removed implementation TODOs from `src/fast_voice/whisper_live/server.py`.
+- **Standards**: Confirmed use of `numpy` for signal processing and `asyncio` for client I/O.
 
-### 1. Installation & Environment
-- **Tooling**: `uv` is correctly installed and configured.
-- **Dependencies**: All dependencies, including `torch`, `torchaudio`, `faster-whisper`, `websockets`, `scipy`, `soundfile`, and `pyaudio`, are correctly installed.
-- **Vendoring**: The `whisper_live` package is successfully vendored and integrated.
-- **Linting**: Application passes `ruff` checks with 0 errors.
+## 2. Functionality Review
+- **Issue Investigated**: TUI overwriting previous text.
+- **Root Cause**: `segments_map` keys (timestamps) were sorted as strings ("10.0" comes before "2.0"), causing segments to appear out of order.
+- **Fix Applied**: Updated `VoiceClient._compile_text` to sort keys as floats.
+- **Verification**: TUI now displays continuous text block correctly. E2E tests pass.
 
-### 2. Startup Performance
-- **Splash Screen**: Instant ANSI splash screen appears immediately (<10ms).
-- **Model Loading**: The `faster-whisper-small` model downloads successfully on the first run. Subsequent runs load significantly faster.
-- **Backend Initialization**: The `WhisperLive` server starts on port 9090, and the client connects within 2 seconds.
+## 3. Documentation Update (Technical Writer)
+- **New Artifact**: Created [`AGENT.md`](AGENT.md) as the primary architectural reference for future agents.
+- **User Guide**: Updated [`README.md`](README.md) with new TUI shortcuts (`c` = Copy, `?` = Help).
+- **Developer Guide**: Confirmed [`development.md`](development.md) covers AsyncAPI and new SDK callbacks.
 
-### 3. Functionality
-- **Transcription**: Real-time voice capture and transcription are functional.
-- **UI Integration**: Transcription text is correctly piped from the backend to the `Rich` UI in the main process.
-- **Design**: The "Nano Banana" aesthetic (Yellow/Dark) is consistent with design requirements.
+## 4. Test Summary
+All 12 tests passed successfully in ~18.6s.
 
-### 4. Code Quality
-- **Comments**: Code comments have been scrubbed of implementation details and "thinking processes".
-- **Structure**: Separation of concerns between `main.py` (UI) and `backend.py` (Logic) is maintained.
+| Test Suite | Status | Focus |
+|---|---|---|
+| `test_monitor_e2e` | ✅ | Browser WebSocket broadcasting |
+| `test_client_flow` | ✅ | Daemon -> Client live updates |
+| `test_cowsay` | ✅ | Formatting & Final callback |
+| `test_tui` | ✅ | UI Layout & Queue logic |
+| `test_e2e` | ✅ | Full pipeline (Client -> Server -> VAD -> Whisper) |
 
-## Recommendations
-- **Future Optimization**: Consider caching the model in a permanent location if not already handled by `faster-whisper` default cache.
-- **Logging**: Ensure excessive debug logging from `whisper_live` is suppressed in production to keep the terminal clean.
-
-## Conclusion
-The application is **Stable** and ready for release.
+## Sign-off
+Ready for deployment.

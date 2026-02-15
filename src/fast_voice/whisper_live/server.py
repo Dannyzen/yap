@@ -491,7 +491,7 @@ class TranscriptionServer:
             if faster_whisper_custom_model_path or whisper_tensorrt_path:
                 logging.info("Custom model option was provided. Switching to single model mode.")
                 self.single_model = True
-                # TODO: load model initially
+
             else:
                 logging.info("Single model mode currently only works with custom models.")
         if not BackendType.is_valid(backend):

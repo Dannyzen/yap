@@ -5,7 +5,7 @@ import websockets
 import uuid
 import sys
 import numpy as np
-# import audioop - Deprecated
+
 from fast_voice.config import Config
 from .daemon import ensure_daemon_running
 
@@ -168,7 +168,8 @@ class VoiceClient:
                 callback(final_text)
 
     def _compile_text(self, segments_map):
-        sorted_segments = [segments_map[k] for k in sorted(segments_map.keys())]
+        sorted_keys = sorted(segments_map.keys(), key=float)
+        sorted_segments = [segments_map[k] for k in sorted_keys]
         
         # De-duplicate identical consecutive segments
         unique_segments = []
