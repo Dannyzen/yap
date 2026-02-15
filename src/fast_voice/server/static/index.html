@@ -98,49 +98,53 @@
         function toggleConnection() {
             if (ws) {
                 ws.close();
-                ws = null;
-                setStatus('disconnected');
             } else {
                 connect();
             }
         }
 
         function connect() {
+            const btn = document.getElementById('connectBtn');
+            btn.innerText = "Connecting...";
             setStatus('connecting');
+
             ws = new WebSocket("ws://localhost:9090");
 
             ws.onopen = () => {
                 console.log("Connected");
-                // Handshake for monitor task
                 ws.send(JSON.stringify({ task: "monitor" }));
             };
 
             ws.onmessage = (event) => {
-                const data = JSON.parse(event.data);
+                try {
+                    const data = JSON.parse(event.data);
 
-                if (data.status === "MONITOR_READY") {
-                    setStatus('connected');
-                    console.log("Monitor Ready");
-                } else if (data.segments) {
-                    // We received a transcript update
-                    // In a simpler version, just append the last segment text
-                    // But we might get full partial updates.
-                    // For visualization, let's just create a bubble for the latest completed segment
-                    // OR update the current growing segment.
-
-                    // Simple logic: If we see a completed segment?
-                    // Actually, let's just look at the last segment in the list.
-                    const lastSeg = data.segments[data.segments.length - 1];
-                    if (lastSeg) {
-                        updateTranscriptDisplay(lastSeg);
+                    if (data.status === "MONITOR_READY") {
+                        setStatus('connected');
+                        console.log("Monitor Ready");
+                        document.getElementById('placeholder').innerHTML = `
+                            <div class="animate-pulse text-blue-400 font-medium">
+                                Listening for active clients...<br>
+                                <span class="text-xs text-gray-500 font-normal">Run 'fast-voice-client' or 'examples/cowsay_app.py' to speak</span>
+                            </div>
+                        `;
+                    } else if (data.segments) {
+                        const uid = data.uid;
+                        // Process all segments generally, but for now just the last one 
+                        // to keep visualization simple
+                        if (data.segments.length > 0) {
+                            const lastSeg = data.segments[data.segments.length - 1];
+                            updateTranscriptDisplay(uid, lastSeg);
+                        }
                     }
+                } catch (e) {
+                    console.error("Error processing message:", e);
                 }
             };
 
             ws.onclose = () => {
                 ws = null;
                 setStatus('disconnected');
-                console.log("Disconnected");
             };
 
             ws.onerror = (e) => {
@@ -150,50 +154,43 @@
             };
         }
 
-        let currentSegmentId = null;
-        let currentSegmentDiv = null;
-
-        function updateTranscriptDisplay(segment) {
-            // We use start time as a pseudo-ID to know if we are updating the same bubble or making a new one
-            // Ideally server sends IDs, but we can assume start time is unique enough per session.
-            const segId = segment.start + "-" + segment.uid; // uid not in segment object usually?
-            // Actually, server sends {uid: ..., segments: ...}
-
-            // Wait, we don't have the UID in the segment, but we have it in the message envelope?
-            // "segments" is inside "data".
-            // Let's assume sequential for now.
-
-            // If the time gap from current bubble is large, new bubble.
-            // Or just append.
-
+        function updateTranscriptDisplay(uid, segment) {
             const text = segment.text.trim();
             if (!text) return;
 
-            // Rudimentary: Just create a new entry for every finalized segment?
-            // Or update the last one?
+            // Ensure start time is a number
+            const startTime = parseFloat(segment.start);
 
-            // Using a timestamp based key logic
-            const key = segment.start;
+            // Use time as key. simple for demo.
+            const key = startTime.toFixed(3).replace('.', '-');
+            const divId = `seg-${uid}-${key}`;
 
-            let div = document.getElementById(`seg-${key}`);
+            let div = document.getElementById(divId);
             if (!div) {
                 div = document.createElement('div');
-                div.id = `seg-${key}`;
-                div.className = "p-3 bg-gray-700/50 rounded-lg border-l-4 border-blue-500 fade-in";
+                div.id = divId;
+                div.className = "p-3 bg-gray-700/50 rounded-lg border-l-4 border-blue-500 fade-in mb-3";
 
-                const timeStr = new Date().toLocaleTimeString([], { hour12: false });
+                // Generate a consistent color for the user based on UID
+                const shortUid = uid.substring(0, 4);
+
                 div.innerHTML = `
                     <div class="text-xs text-gray-400 mb-1 flex justify-between">
-                        <span>Speaker</span>
-                        <span>${segment.start.toFixed(1)}s</span>
+                        <span class="font-mono text-blue-300">User ${shortUid}</span>
+                        <span>${startTime.toFixed(1)}s</span>
                     </div>
-                    <div class="text-lg text-gray-100 leading-relaxed segment-text"></div>
+                    <div class="text-lg text-gray-100 leading-relaxed segment-text font-serif"></div>
                 `;
                 container.appendChild(div);
                 container.scrollTop = container.scrollHeight;
             }
 
+            // Update text
             div.querySelector('.segment-text').innerText = text;
+
+            // Hide placeholder if visible
+            const ph = document.getElementById('placeholder');
+            if (ph && ph.style.display !== 'none') ph.style.display = 'none';
         }
     </script>
 </body>
