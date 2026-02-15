@@ -240,13 +240,14 @@
             mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
             // Create Context
-            // Prefer 16k if supported, else we must resample
-            const options = { sampleRate: 16000 };
+            // We do NOT pass sampleRate here because on some OS/Browsers (Like Linux PulseAudio),
+            // opening a context at a rate different from hardware causes a crash or error.
+            // We will handle resampling manually in the scriptProcessor.
             try {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)(options);
-            } catch (e) {
-                // Fallback if browser doesn't support setting sampleRate
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            } catch (e) {
+                console.error("Failed to create AudioContext", e);
+                throw e;
             }
 
             const source = audioCtx.createMediaStreamSource(mediaStream);
