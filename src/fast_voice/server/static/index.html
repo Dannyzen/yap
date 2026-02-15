@@ -22,19 +22,23 @@
                 transform: translateY(0);
             }
         }
+
+        .mic-active {
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+        }
     </style>
 </head>
 
 <body class="bg-gray-900 text-gray-100 font-sans min-h-screen flex flex-col items-center p-6">
 
     <div class="w-full max-w-3xl">
-        <header class="flex justify-between items-center mb-8 border-b border-gray-700 pb-4">
+        <header class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
             <div>
                 <h1
                     class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
                     ⚡ Fast Voice-to-Text
                 </h1>
-                <p class="text-gray-400 text-sm mt-1">Real-time Transcript Monitor</p>
+                <p class="text-gray-400 text-sm mt-1">Real-time Transcript Monitor & Client</p>
             </div>
             <div id="status"
                 class="flex items-center space-x-2 px-3 py-1 rounded-full bg-red-900/30 text-red-400 border border-red-800 transition-all duration-300">
@@ -44,17 +48,28 @@
         </header>
 
         <main class="space-y-6">
-            <div id="controls" class="text-center">
+            <div id="controls" class="flex flex-col items-center gap-4">
+                <div class="flex bg-gray-800 p-1 rounded-lg">
+                    <button id="modeMonitor" onclick="setMode('monitor')"
+                        class="px-4 py-2 rounded-md text-sm font-medium transition-all bg-gray-700 text-white shadow-sm">
+                        📺 Monitor Only
+                    </button>
+                    <button id="modeMic" onclick="setMode('mic')"
+                        class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-400 hover:text-white">
+                        🎤 Microphone Input
+                    </button>
+                </div>
+
                 <button id="connectBtn" onclick="toggleConnection()"
-                    class="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-6 rounded-lg transition-all shadow-lg hover:shadow-blue-500/20 active:scale-95">
-                    Connect to Server
+                    class="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-8 rounded-lg transition-all shadow-lg hover:shadow-blue-500/20 active:scale-95 w-full max-w-xs flex justify-center items-center gap-2">
+                    Connect
                 </button>
             </div>
 
             <div id="transcript-container"
-                class="bg-gray-800/50 rounded-xl p-6 min-h-[400px] max-h-[70vh] overflow-y-auto border border-gray-700 shadow-xl space-y-4">
+                class="bg-gray-800/50 rounded-xl p-6 min-h-[400px] max-h-[70vh] overflow-y-auto border border-gray-700 shadow-xl space-y-4 relative">
                 <div class="text-center text-gray-500 italic mt-20" id="placeholder">
-                    Waiting for connection...
+                    Select a mode and connect...
                 </div>
                 <!-- Transcripts appear here -->
             </div>
@@ -67,17 +82,44 @@
 
     <script>
         let ws = null;
+        let audioCtx = null;
+        let mediaStream = null;
+        let scriptProcessor = null;
+        let currentMode = 'monitor'; // 'monitor' or 'mic'
+
         const statusEl = document.getElementById('status');
         const connectBtn = document.getElementById('connectBtn');
         const container = document.getElementById('transcript-container');
         const placeholder = document.getElementById('placeholder');
-        let reconnectInterval = null;
+
+        function setMode(mode) {
+            if (ws) {
+                alert("Please disconnect before changing modes.");
+                return;
+            }
+            currentMode = mode;
+
+            // Update UI tabs
+            if (mode === 'monitor') {
+                document.getElementById('modeMonitor').className = "px-4 py-2 rounded-md text-sm font-medium transition-all bg-gray-700 text-white shadow-sm";
+                document.getElementById('modeMic').className = "px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-400 hover:text-white";
+                connectBtn.classList.remove('bg-red-600', 'hover:bg-red-500');
+                connectBtn.classList.add('bg-blue-600', 'hover:bg-blue-500');
+                connectBtn.innerHTML = "Connect Monitor";
+            } else {
+                document.getElementById('modeMic').className = "px-4 py-2 rounded-md text-sm font-medium transition-all bg-red-700 text-white shadow-sm";
+                document.getElementById('modeMonitor').className = "px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-400 hover:text-white";
+                connectBtn.classList.remove('bg-blue-600', 'hover:bg-blue-500');
+                connectBtn.classList.add('bg-red-600', 'hover:bg-red-500');
+                connectBtn.innerHTML = "Start Microphone";
+            }
+        }
 
         function setStatus(state) {
             const config = {
                 disconnected: { text: "Disconnected", color: "red" },
                 connecting: { text: "Connecting...", color: "yellow" },
-                connected: { text: "Live", color: "green" }
+                connected: { text: currentMode === 'mic' ? "Recording" : "Live", color: "green" }
             };
             const c = config[state];
             statusEl.className = `flex items-center space-x-2 px-3 py-1 rounded-full bg-${c.color}-900/30 text-${c.color}-400 border border-${c.color}-800 transition-all duration-300`;
@@ -85,34 +127,56 @@
 
             if (state === 'connected') {
                 connectBtn.innerText = "Disconnect";
-                connectBtn.classList.replace('bg-blue-600', 'bg-red-600');
-                connectBtn.classList.replace('hover:bg-blue-500', 'hover:bg-red-500');
+                if (currentMode === 'mic') {
+                    connectBtn.classList.add('animate-pulse');
+                }
                 if (placeholder) placeholder.style.display = 'none';
             } else {
-                connectBtn.innerText = "Connect to Server";
-                connectBtn.classList.replace('bg-red-600', 'bg-blue-600');
-                connectBtn.classList.replace('hover:bg-red-500', 'hover:bg-blue-500');
+                connectBtn.innerText = currentMode === 'mic' ? "Start Microphone" : "Connect Monitor";
+                connectBtn.classList.remove('animate-pulse');
             }
         }
 
         function toggleConnection() {
             if (ws) {
-                ws.close();
+                stopConnection();
             } else {
-                connect();
+                startConnection();
             }
         }
 
-        function connect() {
-            const btn = document.getElementById('connectBtn');
-            btn.innerText = "Connecting...";
+        async function startConnection() {
             setStatus('connecting');
+
+            if (currentMode === 'mic') {
+                try {
+                    await startAudioCapture();
+                } catch (e) {
+                    console.error("Audio capture failed:", e);
+                    alert("Could not access microphone: " + e.message);
+                    setStatus('disconnected');
+                    return;
+                }
+            }
 
             ws = new WebSocket("ws://localhost:9090");
 
             ws.onopen = () => {
                 console.log("Connected");
-                ws.send(JSON.stringify({ task: "monitor" }));
+
+                if (currentMode === 'monitor') {
+                    ws.send(JSON.stringify({ task: "monitor" }));
+                } else {
+                    // Send Handshake for Transcription
+                    const handshake = {
+                        uid: generateUUID(),
+                        language: "en",
+                        task: "transcribe",
+                        model: "small",
+                        use_vad: true
+                    };
+                    ws.send(JSON.stringify(handshake));
+                }
             };
 
             ws.onmessage = (event) => {
@@ -120,18 +184,12 @@
                     const data = JSON.parse(event.data);
 
                     if (data.status === "MONITOR_READY") {
-                        setStatus('connected');
-                        console.log("Monitor Ready");
-                        document.getElementById('placeholder').innerHTML = `
-                            <div class="animate-pulse text-blue-400 font-medium">
-                                Listening for active clients...<br>
-                                <span class="text-xs text-gray-500 font-normal">Run 'fast-voice-client' or 'examples/cowsay_app.py' to speak</span>
-                            </div>
-                        `;
+                        handleReady("Listening for active clients...");
+                    } else if (data.message === "SERVER_READY") {
+                        handleReady("Microphone Active - Speak Now!");
+                        // Start streaming audio
                     } else if (data.segments) {
-                        const uid = data.uid;
-                        // Process all segments generally, but for now just the last one 
-                        // to keep visualization simple
+                        const uid = data.uid || "local";
                         if (data.segments.length > 0) {
                             const lastSeg = data.segments[data.segments.length - 1];
                             updateTranscriptDisplay(uid, lastSeg);
@@ -143,25 +201,134 @@
             };
 
             ws.onclose = () => {
+                stopAudioCapture();
                 ws = null;
                 setStatus('disconnected');
             };
 
             ws.onerror = (e) => {
                 console.error(e);
-                ws = null;
-                setStatus('disconnected');
+                stopConnection();
             };
+        }
+
+        function stopConnection() {
+            if (ws) {
+                ws.close();
+                ws = null;
+            }
+            stopAudioCapture();
+            setStatus('disconnected');
+        }
+
+        function handleReady(msg) {
+            setStatus('connected');
+            console.log("Ready");
+            document.getElementById('placeholder').innerHTML = `
+                <div class="animate-pulse text-blue-400 font-medium">
+                    ${msg}<br>
+                    <span class="text-xs text-gray-500 font-normal">
+                        ${currentMode === 'monitor' ? "Run 'fast-voice-client' to speak" : "Streaming audio to server..."}
+                    </span>
+                </div>
+            `;
+        }
+
+        // --- Audio Capture Logic ---
+        async function startAudioCapture() {
+            // Request standard audio
+            mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+            // Create Context
+            // Prefer 16k if supported, else we must resample
+            const options = { sampleRate: 16000 };
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)(options);
+            } catch (e) {
+                // Fallback if browser doesn't support setting sampleRate
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            const source = audioCtx.createMediaStreamSource(mediaStream);
+
+            // Use ScriptProcessor for raw data access (worklet is better but harder in single file)
+            // Buffer size 4096 is ~0.25s at 16k, acceptable latency
+            scriptProcessor = audioCtx.createScriptProcessor(4096, 1, 1);
+
+            source.connect(scriptProcessor);
+            scriptProcessor.connect(audioCtx.destination); // destination needed for chrome to fire events
+
+            scriptProcessor.onaudioprocess = (e) => {
+                if (!ws || ws.readyState !== WebSocket.OPEN) return;
+
+                const inputData = e.inputBuffer.getChannelData(0); // Float32 -1.0 to 1.0
+
+                // Resample if needed
+                if (audioCtx.sampleRate !== 16000) {
+                    // Simple downsampling
+                    const targetData = downsampleBuffer(inputData, audioCtx.sampleRate, 16000);
+                    ws.send(targetData.buffer);
+                } else {
+                    ws.send(inputData.buffer);
+                }
+            };
+        }
+
+        function stopAudioCapture() {
+            if (scriptProcessor) {
+                scriptProcessor.disconnect();
+                scriptProcessor.onaudioprocess = null;
+                scriptProcessor = null;
+            }
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                mediaStream = null;
+            }
+            if (audioCtx) {
+                audioCtx.close();
+                audioCtx = null;
+            }
+        }
+
+        // Simple linear interpolation downsampler
+        function downsampleBuffer(buffer, sampleRate, outSampleRate) {
+            if (outSampleRate === sampleRate) {
+                return buffer;
+            }
+            if (outSampleRate > sampleRate) {
+                throw "Downsampling only";
+            }
+            const sampleRateRatio = sampleRate / outSampleRate;
+            const newLength = Math.round(buffer.length / sampleRateRatio);
+            const result = new Float32Array(newLength);
+            let offsetResult = 0;
+            let offsetBuffer = 0;
+            while (offsetResult < result.length) {
+                const nextOffsetBuffer = Math.round((offsetResult + 1) * sampleRateRatio);
+                let accum = 0, count = 0;
+                for (let i = offsetBuffer; i < nextOffsetBuffer && i < buffer.length; i++) {
+                    accum += buffer[i];
+                    count++;
+                }
+                result[offsetResult] = accum / count;
+                offsetResult++;
+                offsetBuffer = nextOffsetBuffer;
+            }
+            return result;
+        }
+
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
         }
 
         function updateTranscriptDisplay(uid, segment) {
             const text = segment.text.trim();
             if (!text) return;
 
-            // Ensure start time is a number
             const startTime = parseFloat(segment.start);
-
-            // Use time as key. simple for demo.
             const key = startTime.toFixed(3).replace('.', '-');
             const divId = `seg-${uid}-${key}`;
 
@@ -171,7 +338,6 @@
                 div.id = divId;
                 div.className = "p-3 bg-gray-700/50 rounded-lg border-l-4 border-blue-500 fade-in mb-3";
 
-                // Generate a consistent color for the user based on UID
                 const shortUid = uid.substring(0, 4);
 
                 div.innerHTML = `
@@ -185,13 +351,14 @@
                 container.scrollTop = container.scrollHeight;
             }
 
-            // Update text
             div.querySelector('.segment-text').innerText = text;
 
-            // Hide placeholder if visible
             const ph = document.getElementById('placeholder');
             if (ph && ph.style.display !== 'none') ph.style.display = 'none';
         }
+
+        // Set initial mode
+        setMode('monitor');
     </script>
 </body>
 
