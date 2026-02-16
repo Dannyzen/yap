@@ -27,16 +27,18 @@ class VoiceClient:
     Handles audio capture via PyAudio, signal processing (resampling, normalization),
     and WebSocket communication.
     """
-    def __init__(self, host="localhost", port=9090):
+    def __init__(self, host="localhost", port=9090, auto_start=True):
         """
         Initialize the voice client.
 
         Args:
             host (str): The hostname of the server. Defaults to "localhost".
             port (int): The port of the server. Defaults to 9090.
+            auto_start (bool): Whether to auto-start the server daemon. Defaults to True.
         """
         # Auto-start daemon if needed
-        ensure_daemon_running(host, port)
+        if auto_start:
+            ensure_daemon_running(host, port)
         
         self.uri = f"ws://{host}:{port}"
         self.uid = str(uuid.uuid4())

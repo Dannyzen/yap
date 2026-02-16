@@ -1,8 +1,8 @@
 import unittest
 import asyncio
 import threading
-from fast_voice.testing import SimulationClient
-from fast_voice.client.daemon import ensure_daemon_running
+from yap.testing import SimulationClient
+from yap.client.daemon import ensure_daemon_running
 
 class TestEndToEnd(unittest.TestCase):
     def test_voice_pipeline(self):

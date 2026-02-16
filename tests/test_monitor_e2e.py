@@ -4,9 +4,9 @@ import json
 import threading
 import time
 import websockets
-from fast_voice.server.main import start as start_server
-from fast_voice.testing.client import SimulationClient
-from fast_voice.config import Config
+from yap.server.main import start as start_server
+from yap.testing.client import SimulationClient
+from yap.config import Config
 
 class TestMonitorE2E(unittest.TestCase):
     @classmethod
@@ -32,7 +32,7 @@ class TestMonitorE2E(unittest.TestCase):
         # actually server.run uses websockets.sync.server.serve which blocks.
         # So we definitely need a thread.
         
-        from fast_voice.whisper_live.server import TranscriptionServer
+        from yap.whisper_live.server import TranscriptionServer
         server = TranscriptionServer()
         server_thread = threading.Thread(
             target=server.run,

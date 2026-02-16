@@ -1,6 +1,6 @@
 import asyncio
 import sys
-from fast_voice.client.core import VoiceClient
+from yap.client.core import VoiceClient
 
 def cowsay(text):
     cow = r"""

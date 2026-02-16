@@ -7,7 +7,7 @@ import asyncio
 
 class TestClientFlow(unittest.TestCase):
     def setUp(self):
-        self.pyaudio_patcher = patch('fast_voice.client.core.pyaudio')
+        self.pyaudio_patcher = patch('yap.client.core.pyaudio')
         self.mock_pyaudio = self.pyaudio_patcher.start()
         
         # Also patch ctypes to avoid alsa error handler logic running
@@ -17,11 +17,11 @@ class TestClientFlow(unittest.TestCase):
         self.cdll_patcher.start()
         
         # Patched config to avoid file lookups
-        self.config_patcher = patch('fast_voice.client.core.Config')
+        self.config_patcher = patch('yap.client.core.Config')
         self.mock_config = self.config_patcher.start()
         self.mock_config.return_value.get.return_value = "default"
 
-        from fast_voice.client.core import VoiceClient
+        from yap.client.core import VoiceClient
         self.VoiceClient = VoiceClient
 
     def tearDown(self):
@@ -35,7 +35,7 @@ class TestClientFlow(unittest.TestCase):
         Verify that JSON messages from the daemon are correctly parsed 
         and the application callback is invoked with the text.
         """
-        client = self.VoiceClient()
+        client = self.VoiceClient(auto_start=False)
         
         # Mock Websocket
         mock_ws = AsyncMock()

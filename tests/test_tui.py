@@ -1,12 +1,12 @@
 import unittest
 from unittest.mock import MagicMock, patch, AsyncMock
 import queue
-from fast_voice.client.tui import TUIApp
+from yap.client.tui import TUIApp
 
 class TestTUI(unittest.TestCase):
     def setUp(self):
         # Patch Environment to prevent ALSA/PyAudio issues
-        self.pyaudio_patcher = patch('fast_voice.client.core.pyaudio')
+        self.pyaudio_patcher = patch('yap.client.core.pyaudio')
         self.pyaudio_patcher.start()
         self.ctypes_patcher = patch('ctypes.CFUNCTYPE')
         self.ctypes_patcher.start()
@@ -19,7 +19,7 @@ class TestTUI(unittest.TestCase):
         self.mock_client.close = AsyncMock()
         
         # Patch Console to avoid actual printing
-        self.console_patcher = patch('fast_voice.client.tui.Console')
+        self.console_patcher = patch('yap.client.tui.Console')
         self.mock_console = self.console_patcher.start()
         self.app = TUIApp(self.mock_client)
 
