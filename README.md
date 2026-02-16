@@ -32,8 +32,8 @@ A high-performance, local voice-to-text system using `faster-whisper`. Designed 
 
 The system consists of two main components:
 
-1.  **Client (`src/fast_voice/client`)**: Lightweight. Captures audio using `PyAudio`, handles device selection, downsampling, and streams raw PCM to the server via WebSockets.
-2.  **Server (`src/fast_voice/server`)**: Heavy. Runs `faster-whisper` model. Accepts audio streams, performs VAD, and executes inference.
+1.  **Client (`src/yap/client`)**: Lightweight. Captures audio using `PyAudio`, handles device selection, downsampling, and streams raw PCM to the server via WebSockets.
+2.  **Server (`src/yap/server`)**: Heavy. Runs `faster-whisper` model. Accepts audio streams, performs VAD, and executes inference.
 
 See `docs/architecture.md` for a detailed architectural overview.
 
@@ -87,7 +87,7 @@ Run the speech recognition entirely in your browser without any terminal client.
     ```
 2.  **Open the WebUI**:
     ```bash
-    xdg-open src/fast_voice/server/static/index.html
+    xdg-open examples/web-client/index.html
     ```
 3.  **Start Speaking**:
     Click **"Start Microphone"**, allow permissions, and your speech will be transcribed instantly.

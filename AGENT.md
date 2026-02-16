@@ -17,7 +17,7 @@ Yap is a split-architecture speech recognition system tailored for low latency a
     *   Runs `faster-whisper` (an optimized implementation of OpenAI's Whisper).
     *   Performs VAD to filter silence.
     *   Returns partial and final JSON transcripts.
-3.  **WebUI (`src/yap/server/static/index.html`)**:
+3.  **WebUI (`examples/web-client/index.html`)**:
     *   A browser-based client that behaves exactly like the Python client.
     *   Uses Web Audio API (`scriptProcessor`) to capture and downsample audio.
     *   Connects to the server to display real-time results.
@@ -31,7 +31,7 @@ The system behaves dynamically based on `app.yaml`.
 ## Development Workflow
 *   **Run Server**: `uv run v2td`
 *   **Run Client**: `uv run fast-voice-client`
-*   **Run Web Client**: Open `src/yap/server/static/index.html`
+*   **Run Web Client**: Open `examples/web-client/index.html`
 *   **Testing**: `uv run python -m unittest discover tests`
 
 ## Key Internal Structures
