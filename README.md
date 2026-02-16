@@ -1,12 +1,10 @@
-# YAP (Yet Another Pipe)
+# Fast Voice-to-Text
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-**Yap** is a high-performance, split-architecture voice-to-text system designed to be the ultimate pipe for your voice data. By decoupling the client from the heavy inference server, Yap allows you to run voice-enabled applications on any device while offloading the heavy lifting to a powerful server or background process.
-
-Powered by `faster-whisper`, Yap delivers production-ready accuracy with low latency.
+A high-performance, local voice-to-text system using `faster-whisper`. Designed for **low latency**, **hardware flexibility**, and **production readiness**.
 
 ## Table of Contents
 
@@ -38,6 +36,7 @@ The system consists of two main components:
 2.  **Server (`src/yap/server`)**: Heavy. Runs `faster-whisper` model. Accepts audio streams, performs VAD, and executes inference.
 
 See `docs/architecture.md` for a detailed architectural overview.
+For the full WebSocket protocol specification, see [`docs/asyncapi.yaml`](docs/asyncapi.yaml).
 
 ## Installation
 
@@ -51,8 +50,8 @@ See `docs/architecture.md` for a detailed architectural overview.
 
 1.  **Clone the repository**:
     ```bash
-    git clone https://github.com/your-username/yap-voice.git
-    cd yap-voice
+    git clone https://github.com/your-username/fast-voice.git
+    cd fast-voice
     ```
 
 2.  **Install dependencies**:
@@ -73,6 +72,9 @@ This will:
 
 ### 2. Visual Client (Recommended)
 For a premium terminal experience with live scrolling and status indicators:
+
+![TUI Client](docs/tui.png)
+
 ```bash
 uv run yap
 ```
@@ -82,6 +84,8 @@ uv run yap
 
 ### 3. Web Client (Microphone In Browser)
 Run the speech recognition entirely in your browser without any terminal client.
+
+![Web Client](docs/web.png)
 
 1.  **Start the Server**:
     ```bash
@@ -146,6 +150,27 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+
+### Remote Server (SSH Tunneling)
+You can run the heavy `yap-server` on a powerful remote machine (e.g., a GPU server) and the lightweight TUI on your local laptop.
+
+1.  **On the Remote Server**:
+    Start the server:
+    ```bash
+    uv run yap-server
+    ```
+
+2.  **On Your Local Machine**:
+    Create an SSH tunnel forwarding local port 9090 to the remote server's port 9090:
+    ```bash
+    ssh -L 9090:localhost:9090 user@remote-ip
+    ```
+
+3.  **Run the Local Client**:
+    ```bash
+    uv run yap
+    ```
+    The client will connect to `localhost:9090`, which is securely tunneled to your remote server.
 
 ## Development
 
