@@ -1,13 +1,24 @@
 import asyncio
 import json
-import pyaudio
-import websockets
 import uuid
 import sys
 import numpy as np
+import pyaudio
+import websockets
 
 from fast_voice.config import Config
 from .daemon import ensure_daemon_running
+
+
+"""
+Core client implementation for Fast Voice-to-Text.
+
+This module provides the `VoiceClient` class which handles:
+1.  Connecting to the server via WebSockets.
+2.  Capturing audio from the microphone using PyAudio.
+3.  Preprocessing audio (resampling, normalization).
+4.  Sending audio data and receiving transcription results.
+"""
 
 class VoiceClient:
     """

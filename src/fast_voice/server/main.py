@@ -22,13 +22,12 @@ def start():
     """
     print("⚡ Fast Voice-to-Text Daemon (v2td) starting...")
     config = Config()
-    
+
     # Load config values
     port = config.get("server.port", 9090)
     host = config.get("server.host", "0.0.0.0")
     model_size = config.get("model.size", "small")
     compute_type = config.get("model.compute_type") # Can be None
-    
     # 1. Warmup Model
     try:
         ServeClientFasterWhisper.preload_model(model_size, compute_type=compute_type)

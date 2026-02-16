@@ -7,20 +7,29 @@ import functools
 import logging
 import shutil
 import tempfile
+from enum import Enum
 from typing import Optional, List
+
+import numpy as np
+import uvicorn
+import torch
 from fastapi import FastAPI, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import PlainTextResponse, JSONResponse
-import uvicorn
 from faster_whisper import WhisperModel
-import torch
-
-from enum import Enum
-import numpy as np
 from websockets.sync.server import serve
 from websockets.exceptions import ConnectionClosed
+
 from fast_voice.whisper_live.vad import VoiceActivityDetector
 from fast_voice.whisper_live.backend.base import ServeClientBase
+
+"""
+Server module for Fast Voice-to-Text.
+
+Handles WebSocket connections, client management, and orchestrates the transcription process
+using various backends (Faster Whisper, TensorRT, OpenVINO).
+"""
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -171,13 +180,24 @@ class BackendType(Enum):
 
 
 class TranscriptionServer:
+    """
+    Main server class for handling transcription requests.
+    
+    Manages WebSocket connections, dispatches audio to backends, and handles
+    REST API requests if enabled.
+    """
     RATE = 16000
 
     def __init__(self):
+        """Initialize the TranscriptionServer."""
         self.client_manager = None
         self.no_voice_activity_chunks = 0
         self.use_vad = True
         self.single_model = False
+        self.backend = None
+        self.vad_detector = None
+        self.cache_path = None
+        self.client_uid = None
 
     def initialize_client(
         self, websocket, options, faster_whisper_custom_model_path,

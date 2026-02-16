@@ -6,6 +6,14 @@ import queue
 import numpy as np
 
 
+"""
+Base class for Transcription Server Clients.
+
+Defines the interface and common logic for processing audio streams,
+buffering, and handling transcription results independent of the specific backend.
+"""
+
+
 class ServeClientBase(object):
     RATE = 16000
     SERVER_READY = "SERVER_READY"
@@ -103,10 +111,26 @@ class ServeClientBase(object):
                 logging.error(f"[ERROR]: Failed to transcribe audio chunk: {e}")
                 time.sleep(0.01)
 
-    def transcribe_audio(self):
+    def transcribe_audio(self, input_sample):
+        """
+        Transcribe the given audio sample.
+        
+        Args:
+            input_sample (np.ndarray): The audio chunk to transcribe.
+            
+        Returns:
+            The raw result from the backend (varies by implementation).
+        """
         raise NotImplementedError
 
     def handle_transcription_output(self, result, duration):
+        """
+        Process the raw backend result and update the transcript.
+        
+        Args:
+            result: The raw output from `transcribe_audio`.
+            duration (float): The duration of the processed audio chunk.
+        """
         raise NotImplementedError
     
     def format_segment(self, start, end, text, completed=False):
