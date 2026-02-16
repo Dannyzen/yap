@@ -3,8 +3,8 @@ import logging
 import threading
 import time
 
-from fast_voice.whisper_live.backend.base import ServeClientBase
-from fast_voice.whisper_live.transcriber.transcriber_tensorrt import WhisperTRTLLM
+from yap.whisper_live.backend.base import ServeClientBase
+from yap.whisper_live.transcriber.transcriber_tensorrt import WhisperTRTLLM
 
 
 class ServeClientTensorRT(ServeClientBase):

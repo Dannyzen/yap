@@ -92,19 +92,28 @@ class TUIApp:
                 pyperclip.copy(self._last_text)
                 self.status = "Copied!"
                 self.status_style = "magenta"
-        except ImportError:
-            self.status = "pyperclip not installed"
+                self._status_timer = 20  # Show for ~2 seconds (20 * 0.1s)
+            else:
+                 self.status = "Nothing to copy"
+                 self.status_style = "yellow"
+                 self._status_timer = 10
+        except Exception as e:
+            self.status = "Copy Failed"
             self.status_style = "red"
+            self._status_timer = 20
+            # Import might fail if xclip/xsel missing on Linux
 
     async def run(self):
-        layout = self.make_layout()
-        
+        # ... (setup layout) ...
         self.status = "Connecting..."
         self.status_style = "yellow"
+        self._status_timer = 0
         
+        # ... (client task) ...
         client_task = asyncio.create_task(
             self.client.run(
                 duration=999999,
+                on_transcription=self.on_transcribed,
                 on_live_update=self.on_transcribed
             )
         )
@@ -112,63 +121,81 @@ class TUIApp:
         self.status = "Listening"
         self.status_style = "green"
 
-        # Non-blocking keyboard input
-        import tty, termios
+        import tty, termios, select
         old_settings = None
-        fd = None
+        fd = sys.stdin.fileno()
+        
         try:
-            fd = sys.stdin.fileno()
             old_settings = termios.tcgetattr(fd)
             tty.setcbreak(fd)
         except Exception:
             pass
 
-        with Live(layout, refresh_per_second=10, screen=True, console=self.console) as live:
-            while self.running:
-                # 1. Process new transcript updates (replace, don't append)
-                latest = None
-                while not self.transcript_queue.empty():
-                    try:
-                        latest = self.transcript_queue.get_nowait()
-                    except queue.Empty:
+        try:
+            with Live(self.make_layout(), refresh_per_second=10, screen=True, console=self.console) as live:
+                while self.running:
+                    # 1. Update Transcript
+                    while not self.transcript_queue.empty():
+                        try:
+                            self._last_text = self.transcript_queue.get_nowait()
+                        except queue.Empty:
+                            break
+                    
+                    # 2. Handle Input
+                    if old_settings:
+                        rlist, _, _ = select.select([sys.stdin], [], [], 0)
+                        if rlist:
+                            ch = sys.stdin.read(1)
+                            if ch == 'c':
+                                self.copy_to_clipboard()
+                            elif ch == '?':
+                                self._show_help = not self._show_help
+                            elif ch == '\x03': # Ctrl+C
+                                self.running = False
+
+                    # 3. Status Timer Logic
+                    if self._status_timer > 0:
+                        self._status_timer -= 1
+                        if self._status_timer == 0:
+                            self.status = "Listening"
+                            self.status_style = "green"
+
+                    # 4. Render
+                    # (Construct layout updates manually to avoid attribute errors if make_layout returns new obj)
+                    # Actually, Live(layout) keeps reference. We need to update that specific layout object.
+                    # Use a persistent layout object.
+                    
+                    # Re-create layout components for update
+                    live.update(self._update_layout())
+                    
+                    await asyncio.sleep(0.1)
+                    
+                    if client_task.done():
+                        self.status = "Disconnected"
+                        self.status_style = "red"
+                        live.update(self._update_layout())
                         break
-                if latest is not None:
-                    self._last_text = latest
-                
-                # 2. Check for keypress (non-blocking)
-                if old_settings is not None:
-                    import select
-                    rlist, _, _ = select.select([sys.stdin], [], [], 0)
-                    if rlist:
-                        ch = sys.stdin.read(1)
-                        if ch == 'c':
-                            self.copy_to_clipboard()
-                        elif ch == '?':
-                            self._show_help = not self._show_help
 
-                # 3. Update Layout
-                layout["header"].update(self.render_header())
-                layout["main"].update(self.render_main())
-                layout["footer"].update(self.render_footer())
-                
-                # Reset status after copy notification
-                if self.status == "Copied!":
-                    await asyncio.sleep(1)
-                    self.status = "Listening"
-                    self.status_style = "green"
-                
-                await asyncio.sleep(0.1)
-                
-                if client_task.done():
-                    self.status = "Disconnected"
-                    self.status_style = "red"
-                    break
-
-        # Restore terminal
-        if old_settings is not None and fd is not None:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        finally:
+            if old_settings:
+                termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+            
+            # Cancel client if still running
+            if not client_task.done():
+                client_task.cancel()
+                try:
+                    await client_task
+                except asyncio.CancelledError:
+                    pass
 
         return self._last_text
+
+    def _update_layout(self):
+        layout = self.make_layout()
+        layout["header"].update(self.render_header())
+        layout["main"].update(self.render_main())
+        layout["footer"].update(self.render_footer())
+        return layout
 
 def main():
     app = TUIApp()

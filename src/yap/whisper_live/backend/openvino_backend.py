@@ -3,8 +3,8 @@ import logging
 import threading
 
 from openvino import Core
-from fast_voice.whisper_live.backend.base import ServeClientBase
-from fast_voice.whisper_live.transcriber.transcriber_openvino import WhisperOpenVINO
+from yap.whisper_live.backend.base import ServeClientBase
+from yap.whisper_live.transcriber.transcriber_openvino import WhisperOpenVINO
 
 
 class ServeClientOpenVINO(ServeClientBase):

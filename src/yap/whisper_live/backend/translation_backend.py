@@ -3,9 +3,9 @@ import logging
 import queue
 import torch
 from transformers import M2M100ForConditionalGeneration
-from fast_voice.whisper_live.backend.tokenization_small100 import SMALL100Tokenizer
+from yap.whisper_live.backend.tokenization_small100 import SMALL100Tokenizer
 
-from fast_voice.whisper_live.backend.base import ServeClientBase
+from yap.whisper_live.backend.base import ServeClientBase
 
 
 class ServeClientTranslation(ServeClientBase):

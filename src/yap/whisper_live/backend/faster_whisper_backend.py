@@ -6,8 +6,8 @@ import torch
 import ctranslate2
 from huggingface_hub import snapshot_download
 
-from fast_voice.whisper_live.transcriber.transcriber_faster_whisper import WhisperModel
-from fast_voice.whisper_live.backend.base import ServeClientBase
+from yap.whisper_live.transcriber.transcriber_faster_whisper import WhisperModel
+from yap.whisper_live.backend.base import ServeClientBase
 
 
 class ServeClientFasterWhisper(ServeClientBase):
