@@ -6,7 +6,7 @@ import torch
 import ctranslate2
 from huggingface_hub import snapshot_download
 
-from yap.whisper_live.transcriber.transcriber_faster_whisper import WhisperModel
+from faster_whisper import WhisperModel
 from yap.whisper_live.backend.base import ServeClientBase
 
 
