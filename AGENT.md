@@ -1,23 +1,23 @@
-# Fast Voice-to-Text Agent Guide
+# Yap Agent Guide
 
-This document is designed to help AI Agents and Developers understand the structure, usage, and internal workings of the **Fast Voice-to-Text** system.
+This document is designed to help AI Agents and Developers understand the structure, usage, and internal workings of the **Yap** system.
 
 ## Project Overview
-Fast Voice-to-Text is a split-architecture speech recognition system tailored for low latency and high performance. It offloads heavy inference to a server while keeping the client lightweight.
+Yap is a split-architecture speech recognition system tailored for low latency and high performance. It offloads heavy inference to a server while keeping the client lightweight.
 
 ### Core Components
-1.  **Client (`src/fast_voice/client`)**:
+1.  **Client (`src/yap/client`)**:
     *   Captures audio from the microphone to a buffer.
     *   Resamples audio to 16kHz.
     *   Streams raw PCM data via WebSocket to the server.
     *   Handles "VAD" (Voice Activity Detection) implicitly by only sending audio when requested, or continuous streaming.
-2.  **Server (`src/fast_voice/server`)**:
+2.  **Server (`src/yap/server`)**:
     *   Hosts a WebSocket server (default port 9090).
     *   Receives audio chunks.
     *   Runs `faster-whisper` (an optimized implementation of OpenAI's Whisper).
     *   Performs VAD to filter silence.
     *   Returns partial and final JSON transcripts.
-3.  **WebUI (`src/fast_voice/server/static/index.html`)**:
+3.  **WebUI (`src/yap/server/static/index.html`)**:
     *   A browser-based client that behaves exactly like the Python client.
     *   Uses Web Audio API (`scriptProcessor`) to capture and downsample audio.
     *   Connects to the server to display real-time results.
@@ -31,7 +31,7 @@ The system behaves dynamically based on `app.yaml`.
 ## Development Workflow
 *   **Run Server**: `uv run v2td`
 *   **Run Client**: `uv run fast-voice-client`
-*   **Run Web Client**: Open `src/fast_voice/server/static/index.html`
+*   **Run Web Client**: Open `src/yap/server/static/index.html`
 *   **Testing**: `uv run python -m unittest discover tests`
 
 ## Key Internal Structures
