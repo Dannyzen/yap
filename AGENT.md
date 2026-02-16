@@ -1,46 +1,48 @@
-# AGENT.md - Technical Overview & Workflows
+# Fast Voice-to-Text Agent Guide
 
-This document serves as the primary technical reference for AI agents working on the Fast Voice-to-Text project.
+This document is designed to help AI Agents and Developers understand the structure, usage, and internal workings of the **Fast Voice-to-Text** system.
 
-## Architecture Overview
+## Project Overview
+Fast Voice-to-Text is a split-architecture speech recognition system tailored for low latency and high performance. It offloads heavy inference to a server while keeping the client lightweight.
 
-The system follows a split architecture:
+### Core Components
+1.  **Client (`src/fast_voice/client`)**:
+    *   Captures audio from the microphone to a buffer.
+    *   Resamples audio to 16kHz.
+    *   Streams raw PCM data via WebSocket to the server.
+    *   Handles "VAD" (Voice Activity Detection) implicitly by only sending audio when requested, or continuous streaming.
+2.  **Server (`src/fast_voice/server`)**:
+    *   Hosts a WebSocket server (default port 9090).
+    *   Receives audio chunks.
+    *   Runs `faster-whisper` (an optimized implementation of OpenAI's Whisper).
+    *   Performs VAD to filter silence.
+    *   Returns partial and final JSON transcripts.
+3.  **WebUI (`src/fast_voice/server/static/index.html`)**:
+    *   A browser-based client that behaves exactly like the Python client.
+    *   Uses Web Audio API (`scriptProcessor`) to capture and downsample audio.
+    *   Connects to the server to display real-time results.
 
-1.  **Lightweight Client (`src/fast_voice/client`)**:
-    -   **`core.py`**: The `VoiceClient` class handles audio capture (PyAudio), processing (NumPy), and WebSocket streaming.
-    -   **`tui.py`**: Rich-based terminal UI.
-    -   **`daemon.py`**: Auto-starts the server if needed.
-    -   **Protocol**: Sends binary audio frames; receives JSON transcription events.
+## Configuration (`app.yaml`)
+The system behaves dynamically based on `app.yaml`.
+*   **Model**: Toggle between `tiny`, `small`, `medium`, `large-v2`.
+*   **Compute**: `float16` (GPU) or `int8` (CPU). The system auto-downgrades if GPU is missing.
+*   **VAD**: Adjust `vad_onset` and `vad_offset` to tune silence detection sensitivity.
 
-2.  **Inference Server (`src/fast_voice/server`)**:
-    -   **`server.py`**: WebSocket server (FastAPI/Uvicorn not used for main flow, custom loop).
-    -   **`whisper_live/`**: Backend logic wrapping `faster-whisper`.
-    -   **VAD**: Integrated Voice Activity Detection.
+## Development Workflow
+*   **Run Server**: `uv run v2td`
+*   **Run Client**: `uv run fast-voice-client`
+*   **Run Web Client**: Open `src/fast_voice/server/static/index.html`
+*   **Testing**: `uv run python -m unittest discover tests`
 
-3.  **Configuration**:
-    -   `app.yaml`: Central config file, hot-reloaded every 2 seconds.
+## Key Internal Structures
+*   **`ServeClientBase`**: Abstract base class handling the WebSocket loop and buffering.
+*   **`ServeClientFasterWhisper`**: Implementation using `faster-whisper`.
+*   **`VoiceClient`**: Python client class managing PyAudio and WebSocket I/O.
 
-## Key Workflows
+## Common Issues & Fixes
+*   **"AudioContext sample-rate mismatch"**: Fixed by allowing native browser sample rate and downsampling in JS.
+*   **"GPU OOM"**: Reduce `model.size` in `app.yaml` or force `compute_type: int8`.
+*   **"No audio detected"**: Check system microphone input volume or VAD threshold.
 
-### 1. Adding New Clients
-Refer to `development.md` and `docs/asyncapi.yaml`. Use the `SimulationClient` for headless testing.
-
-### 2. Testing
--   **Unit Tests**: `uv run python -m unittest discover tests` covers client, server, and flow.
--   **E2E**: `tests/test_e2e.py` verifies the full pipeline with synthetic audio.
--   **Monitor**: `tests/test_monitor_e2e.py` verifies browser monitor broadcasting.
-
-### 3. Debugging
--   **Audio**: Use `SimulationClient(audio_file="...")` to inject known audio.
--   **Logs**: Server logs to stderr. Client logs connection status to stderr.
--   **TUI**: Renders to stderr to keep stdout clean for piping.
-
-## Code Standards
--   **Linting**: Follow standard Python practices. No implementation details in comments.
--   **Concurrency**: Use `asyncio` for client I/O. Threading for blocking server inference.
--   **Dependencies**: explicit in `pyproject.toml`.
-
-## Common Pitfalls
--   **Sorting**: Transcription segments must be sorted by `start` time (float), not string, to avoid ordering bugs.
--   **Buffer**: `faster-whisper` requires context; the server manages a rolling audio buffer.
--   **Hot-Reload**: Config changes apply instantly; ensure component re-reads config or handles updates.
+## Contribution Guidelines
+See `CONTRIBUTING.md` for style guides and PR processes. We enforce `pylint` and `unittest`.

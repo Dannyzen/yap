@@ -78,15 +78,19 @@ uv run fast-voice-client
 - **Shortcuts**: Press `c` to copy, `?` for help.
 - **Clean Output**: Pipes only final text to stdout on exit.
 
-### 3. Browser Monitor
-View your transcripts in real-time on any device (phone, tablet, laptop) by opening the monitor page.
+### 3. Web Client (Microphone In Browser)
+Run the speech recognition entirely in your browser without any terminal client.
 
-1.  **Open the Monitor**:
-    Open `src/fast_voice/server/static/index.html` in your browser.
-2.  **Connect**:
-    Click the **Connect** button.
-3.  **Speak**:
-    Run any client (e.g., `uv run examples/cowsay_app.py`) and start talking. The words will appear instantly in the browser.
+1.  **Start the Server**:
+    ```bash
+    uv run v2td
+    ```
+2.  **Open the WebUI**:
+    ```bash
+    xdg-open src/fast_voice/server/static/index.html
+    ```
+3.  **Start Speaking**:
+    Click **"Start Microphone"**, allow permissions, and your speech will be transcribed instantly.
 
 ## Configuration
 
