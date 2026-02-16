@@ -1,10 +1,12 @@
-# Fast Voice-to-Text
+# YAP (Yet Another Pipe)
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A high-performance, local voice-to-text system using `faster-whisper`. Designed for **low latency**, **hardware flexibility**, and **production readiness**.
+**Yap** is a high-performance, split-architecture voice-to-text system designed to be the ultimate pipe for your voice data. By decoupling the client from the heavy inference server, Yap allows you to run voice-enabled applications on any device while offloading the heavy lifting to a powerful server or background process.
+
+Powered by `faster-whisper`, Yap delivers production-ready accuracy with low latency.
 
 ## Table of Contents
 
@@ -49,8 +51,8 @@ See `docs/architecture.md` for a detailed architectural overview.
 
 1.  **Clone the repository**:
     ```bash
-    git clone https://github.com/your-username/fast-voice.git
-    cd fast-voice
+    git clone https://github.com/your-username/yap-voice.git
+    cd yap-voice
     ```
 
 2.  **Install dependencies**:
