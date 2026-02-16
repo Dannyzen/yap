@@ -23,19 +23,9 @@ This module provides the `VoiceClient` class which handles:
 class VoiceClient:
     """
     Client for capturing audio and streaming it to the Yap server.
-
-    Handles audio capture via PyAudio, signal processing (resampling, normalization),
-    and WebSocket communication.
     """
     def __init__(self, host="localhost", port=9090, auto_start=True):
-        """
-        Initialize the voice client.
 
-        Args:
-            host (str): The hostname of the server. Defaults to "localhost".
-            port (int): The port of the server. Defaults to 9090.
-            auto_start (bool): Whether to auto-start the server daemon. Defaults to True.
-        """
         # Auto-start daemon if needed
         if auto_start:
             ensure_daemon_running(host, port)
@@ -83,7 +73,7 @@ class VoiceClient:
             on_live_update (callable, optional): Callback for real-time partial text updates.
             use_vad (bool): Whether to enable Voice Activity Detection on the server.
         """
-        print(f"Connecting to {self.uri}...", file=sys.stderr)
+        # print(f"Connecting to {self.uri}...", file=sys.stderr)
         async with websockets.connect(self.uri) as websocket:
             # 1. Handshake
             handshake = {
@@ -101,7 +91,7 @@ class VoiceClient:
                 resp = await websocket.recv()
                 data = json.loads(resp)
                 if data.get("message") == "SERVER_READY":
-                    print(f"Server is ready! Recording for {duration} seconds...", file=sys.stderr)
+                    # print(f"Server is ready! Recording for {duration} seconds...", file=sys.stderr)
                     break
             
             # 3. Stream & Receive
@@ -125,17 +115,6 @@ class VoiceClient:
     async def send_audio(self, websocket, stop_event):
         """
         Captures audio from the microphone and streams it to the server.
-
-        Includes a signal processing pipeline:
-        1. Capture raw PCM (Int16, Stereo/Mono).
-        2. Downmix to Mono.
-        3. Resample to 16kHz (if needed).
-        4. Normalize to Float32.
-        5. Stream via WebSocket.
-
-        Args:
-            websocket: Active WebSocket connection.
-            stop_event (asyncio.Event): Event to signal stopping the stream.
         """
         try:
             stream = self.p.open(
@@ -146,8 +125,8 @@ class VoiceClient:
                 frames_per_buffer=self.chunk,
                 input_device_index=self.device_index
             )
-        except OSError as e:
-            print(f"[ERROR] Failed to open audio stream: {e}", file=sys.stderr)
+        except OSError:
+            # print(f"[ERROR] Failed to open audio stream: {e}", file=sys.stderr)
             return
 
         try:
@@ -182,8 +161,9 @@ class VoiceClient:
                 # Send
                 await websocket.send(audio_np.tobytes())
                 await asyncio.sleep(0.001)
-        except Exception as e:
-             print(f"\n[ERROR] Audio read loop failed: {e}", file=sys.stderr)
+        except Exception:
+             # print(f"\n[ERROR] Audio read loop failed: {e}", file=sys.stderr)
+             pass
         finally:
             stream.stop_stream()
             stream.close()

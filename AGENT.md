@@ -4,6 +4,7 @@ This document is designed to help AI Agents and Developers understand the struct
 
 ## Project Overview
 Yap is a split-architecture speech recognition system tailored for low latency and high performance. It offloads heavy inference to a server while keeping the client lightweight.
+The project follows the `@/teamwork` workflow for quality assurance and role-based development.
 
 ### Core Components
 1.  **Client (`src/yap/client`)**:
@@ -29,9 +30,9 @@ The system behaves dynamically based on `app.yaml`.
 *   **VAD**: Adjust `vad_onset` and `vad_offset` to tune silence detection sensitivity.
 
 ## Development Workflow
-*   **Run Server**: `uv run v2td`
-*   **Run Client**: `uv run fast-voice-client`
-*   **Run Web Client**: Open `examples/web-client/index.html`
+*   **Run Server**: `uv run yap-server` (or `v2td`)
+*   **Run Client**: `uv run yap`
+*   **Run Web Client**: `uv run yap-web`
 *   **Testing**: `uv run python -m unittest discover tests`
 
 ## Key Internal Structures
@@ -45,4 +46,4 @@ The system behaves dynamically based on `app.yaml`.
 *   **"No audio detected"**: Check system microphone input volume or VAD threshold.
 
 ## Contribution Guidelines
-See `CONTRIBUTING.md` for style guides and PR processes. We enforce `pylint` and `unittest`.
+See `CONTRIBUTING.md` for style guides and PR processes. We enforce `unittest` and standard python linting.

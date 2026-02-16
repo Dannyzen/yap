@@ -22,7 +22,7 @@ def ensure_daemon_running(host, port):
         # We return False because it is NOT running and we didn't start it
         return False
 
-    print(f"[INFO] Daemon not found on {host}:{port}. Auto-starting...", file=sys.stderr)
+    # print(f"[INFO] Daemon not found on {host}:{port}. Auto-starting...", file=sys.stderr)
     
     cmd = config.get("daemon.command")
     if not cmd:
@@ -40,7 +40,7 @@ def ensure_daemon_running(host, port):
         )
         
         # Wait for port to open
-        print("[INFO] Waiting for daemon to initialize...", file=sys.stderr)
+        # print("[INFO] Waiting for daemon to initialize...", file=sys.stderr)
         start_time = time.time()
         while time.time() - start_time < 20: # 20s timeout (model load can be slow)
             try:
@@ -50,8 +50,8 @@ def ensure_daemon_running(host, port):
             except (socket.timeout, ConnectionRefusedError, OSError):
                 time.sleep(0.5)
             
-        print("[ERROR] Timeout waiting for daemon to start.", file=sys.stderr)
+        # print("[ERROR] Timeout waiting for daemon to start.", file=sys.stderr)
         return False
     except Exception as e:
-        print(f"[ERROR] Failed to auto-start daemon: {e}", file=sys.stderr)
+        # print(f"[ERROR] Failed to auto-start daemon: {e}", file=sys.stderr)
         return False

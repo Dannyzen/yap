@@ -65,14 +65,14 @@ Run the "Cowsay" example to see it in action:
 uv run examples/cowsay_app.py
 ```
 This will:
-1.  **Auto-start** the `fast-voice-server` daemon if needed.
+1.  **Auto-start** the `yap-server` daemon if needed.
 2.  Record audio for 10 seconds.
 3.  Display the transcript spoken by a cow.
 
 ### 2. Visual Client (Recommended)
 For a premium terminal experience with live scrolling and status indicators:
 ```bash
-uv run fast-voice-client
+uv run yap
 ```
 - **Live Updates**: See text appear instantly.
 - **Shortcuts**: Press `c` to copy, `?` for help.
@@ -83,11 +83,11 @@ Run the speech recognition entirely in your browser without any terminal client.
 
 1.  **Start the Server**:
     ```bash
-    uv run v2td
+    uv run yap-server
     ```
 2.  **Open the WebUI**:
     ```bash
-    xdg-open examples/web-client/index.html
+    uv run yap-web
     ```
 3.  **Start Speaking**:
     Click **"Start Microphone"**, allow permissions, and your speech will be transcribed instantly.
@@ -122,14 +122,14 @@ server:
 ### Manual Server (Optional)
 If you prefer to run the server manually (e.g., for debugging logs):
 ```bash
-uv run fast-voice-server
+uv run yap-server
 ```
 
 ### Using the Client API
 Build your own voice-controlled apps easily:
 ```python
 import asyncio
-from fast_voice.client.core import VoiceClient
+from yap.client.core import VoiceClient
 
 async def main():
     client = VoiceClient()
@@ -164,7 +164,7 @@ uv run python -m unittest tests/test_client.py
 ### Simulation Client
 Use the simulation client to test with synthetic audio or WAV files:
 ```python
-from fast_voice.testing import SimulationClient
+from yap.testing import SimulationClient
 
 # 1. Use built-in synthetic voice
 client = SimulationClient()
