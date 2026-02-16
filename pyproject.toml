@@ -38,6 +38,7 @@ Issues = "https://github.com/your-username/yap/issues"
 [project.scripts]
 yap = "yap.client.tui:main"
 yap-server = "yap.server.main:start"
+yap-web = "yap.client.web:main"
 v2td = "yap.server.main:start"
 
 [build-system]
