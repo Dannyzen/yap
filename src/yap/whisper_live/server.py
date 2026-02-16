@@ -20,11 +20,11 @@ from faster_whisper import WhisperModel
 from websockets.sync.server import serve
 from websockets.exceptions import ConnectionClosed
 
-from fast_voice.whisper_live.vad import VoiceActivityDetector
-from fast_voice.whisper_live.backend.base import ServeClientBase
+from yap.whisper_live.vad import VoiceActivityDetector
+from yap.whisper_live.backend.base import ServeClientBase
 
 """
-Server module for Fast Voice-to-Text.
+Server module for Yap.
 
 Handles WebSocket connections, client management, and orchestrates the transcription process
 using various backends (Faster Whisper, TensorRT, OpenVINO).
@@ -216,7 +216,7 @@ class TranscriptionServer:
         if enable_translation:
             target_language = options.get("target_language", "fr")
             translation_queue = queue.Queue()
-            from fast_voice.whisper_live.backend.translation_backend import ServeClientTranslation
+            from yap.whisper_live.backend.translation_backend import ServeClientTranslation
             translation_client = ServeClientTranslation(
                 client_uid=options["uid"],
                 websocket=websocket,
@@ -236,7 +236,7 @@ class TranscriptionServer:
 
         if self.backend.is_tensorrt():
             try:
-                from fast_voice.whisper_live.backend.trt_backend import ServeClientTensorRT
+                from yap.whisper_live.backend.trt_backend import ServeClientTensorRT
                 client = ServeClientTensorRT(
                     websocket,
                     multilingual=trt_multilingual,
@@ -265,7 +265,7 @@ class TranscriptionServer:
         
         if self.backend.is_openvino():
             try:
-                from fast_voice.whisper_live.backend.openvino_backend import ServeClientOpenVINO
+                from yap.whisper_live.backend.openvino_backend import ServeClientOpenVINO
                 client = ServeClientOpenVINO(
                     websocket,
                     language=options["language"],
@@ -292,7 +292,7 @@ class TranscriptionServer:
 
         try:
             if self.backend.is_faster_whisper():
-                from fast_voice.whisper_live.backend.faster_whisper_backend import ServeClientFasterWhisper
+                from yap.whisper_live.backend.faster_whisper_backend import ServeClientFasterWhisper
                 # model is of the form namespace/repo_name and not a filesystem path
                 if faster_whisper_custom_model_path is not None:
                     logging.info(f"Using custom model {faster_whisper_custom_model_path}")

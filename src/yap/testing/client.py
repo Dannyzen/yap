@@ -4,7 +4,7 @@ import numpy as np
 import sys
 import os
 import wave
-from fast_voice.client.core import VoiceClient
+from yap.client.core import VoiceClient
 
 class SimulationClient(VoiceClient):
     """

@@ -1,13 +1,13 @@
 """
-Fast Voice-to-Text Server Entry Point.
+Yap Server Entry Point.
 
 This module initializes and runs the Transcription Server, loading configuration
 from `app.yaml` and warming up the Whisper model.
 """
 import logging
-from fast_voice.config import Config
-from fast_voice.whisper_live.server import TranscriptionServer
-from fast_voice.whisper_live.backend.faster_whisper_backend import ServeClientFasterWhisper
+from yap.config import Config
+from yap.whisper_live.server import TranscriptionServer
+from yap.whisper_live.backend.faster_whisper_backend import ServeClientFasterWhisper
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s] [%(levelname)s] %(message)s')
@@ -20,7 +20,7 @@ def start():
     2. Preloads/Warms up the Whisper model
     3. Starts the WebSocket server
     """
-    print("⚡ Fast Voice-to-Text Daemon (v2td) starting...")
+    print("⚡ Yap Daemon (v2td) starting...")
     config = Config()
 
     # Load config values

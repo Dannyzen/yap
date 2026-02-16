@@ -6,12 +6,12 @@ import numpy as np
 import pyaudio
 import websockets
 
-from fast_voice.config import Config
+from yap.config import Config
 from .daemon import ensure_daemon_running
 
 
 """
-Core client implementation for Fast Voice-to-Text.
+Core client implementation for Yap.
 
 This module provides the `VoiceClient` class which handles:
 1.  Connecting to the server via WebSockets.
@@ -22,7 +22,7 @@ This module provides the `VoiceClient` class which handles:
 
 class VoiceClient:
     """
-    Client for capturing audio and streaming it to the Fast Voice-to-Text server.
+    Client for capturing audio and streaming it to the Yap server.
 
     Handles audio capture via PyAudio, signal processing (resampling, normalization),
     and WebSocket communication.

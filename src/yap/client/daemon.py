@@ -2,7 +2,7 @@ import socket
 import sys
 import subprocess
 import time
-from fast_voice.config import Config
+from yap.config import Config
 
 def ensure_daemon_running(host, port):
     """
@@ -25,7 +25,7 @@ def ensure_daemon_running(host, port):
     cmd = config.get("daemon.command")
     if not cmd:
         # Default to running the module
-        cmd = ["uv", "run", "fast-voice-server"]
+        cmd = ["uv", "run", "yap-server"]
 
     try:
         # Launch independent subprocess

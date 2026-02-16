@@ -4,8 +4,8 @@ import socket
 import subprocess
 import time
 import os
-from fast_voice.config import Config
-from fast_voice.whisper_live.client import TranscriptionClient, Client
+from yap.config import Config
+from yap.whisper_live.client import TranscriptionClient, Client
 
 def ensure_daemon_running(host, port):
     """
@@ -148,7 +148,7 @@ class ContextTranscriptionClient(TranscriptionClient):
         )
         
         # Init Tee
-        from fast_voice.whisper_live.client import TranscriptionTeeClient
+        from yap.whisper_live.client import TranscriptionTeeClient
         TranscriptionTeeClient.__init__(
             self,
             [self.client],

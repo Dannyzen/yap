@@ -10,7 +10,7 @@ from rich.text import Text
 from rich.align import Align
 from rich.table import Table
 
-from fast_voice.client.core import VoiceClient
+from yap.client.core import VoiceClient
 
 SHORTCUTS = {
     "c": "Copy transcript to clipboard",
@@ -39,7 +39,7 @@ class TUIApp:
         return layout
 
     def render_header(self):
-        title = Text(" ⚡ Fast Voice-to-Text ", style="bold white on blue")
+        title = Text(" ⚡ Yap ", style="bold white on blue")
         status_text = Text(f" ● {self.status} ", style=f"bold white on {self.status_style}")
         
         return Panel(

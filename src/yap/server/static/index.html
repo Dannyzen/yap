@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fast Voice-to-Text Monitor</title>
+    <title>Yap Monitor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .fade-in {
@@ -36,9 +36,9 @@
             <div>
                 <h1
                     class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                    ⚡ Fast Voice-to-Text
+                    ⚡ Yap
                 </h1>
-                <p class="text-gray-400 text-sm mt-1">Real-time Transcript Monitor & Client</p>
+                <p class="text-gray-400 text-sm mt-1">Yet Another Pipe - Voice Client</p>
             </div>
             <div id="status"
                 class="flex items-center space-x-2 px-3 py-1 rounded-full bg-red-900/30 text-red-400 border border-red-800 transition-all duration-300">
@@ -65,7 +65,7 @@
         </main>
 
         <footer class="mt-8 text-gray-500 text-xs text-center">
-            Fast Voice-to-Text Server v1.0
+            Yap Server v1.0
         </footer>
     </div>
 
@@ -185,7 +185,7 @@
                 <div class="animate-pulse text-blue-400 font-medium">
                     ${msg}<br>
                     <span class="text-xs text-gray-500 font-normal">
-                        ${currentMode === 'monitor' ? "Run 'fast-voice-client' to speak" : "Streaming audio to server..."}
+                        Streaming audio to server...
                     </span>
                 </div>
             `;
@@ -316,7 +316,7 @@
         }
 
         // Set initial mode
-        setMode('monitor');
+
     </script>
 </body>
 
