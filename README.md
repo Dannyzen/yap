@@ -1,4 +1,4 @@
-# Fast Voice-to-Text
+# YAP - Yet Another P|PE: Fast Voice-to-Text
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)
