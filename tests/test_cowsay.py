@@ -28,9 +28,7 @@ class TestCowsayApp(unittest.TestCase):
         mock_client_instance.run = AsyncMock()
         
         # Run main
-        # We need to make sure it doesn't run forever or block?
-        # main() just calls client.run(duration=10)
-        # So mocking run is enough.
+        # Ensure main() does not block by mocking client.run()
         
         import asyncio
         asyncio.run(main())

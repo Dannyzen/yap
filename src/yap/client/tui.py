@@ -162,7 +162,7 @@ class TUIApp:
 
                     # 4. Render
                     # (Construct layout updates manually to avoid attribute errors if make_layout returns new obj)
-                    # Actually, Live(layout) keeps reference. We need to update that specific layout object.
+                    # Live(layout) keeps a reference, therefore we must update the specific layout object.
                     # Use a persistent layout object.
                     
                     # Re-create layout components for update

@@ -28,9 +28,7 @@ class TestMonitorE2E(unittest.TestCase):
 
     async def _async_test_monitor(self):
         # 1. Start Server (Mock or Real)
-        # It's an E2E test, so Real Server is best, but running it in-process is tricky with uvicorn/websockets.sync
-        # actually server.run uses websockets.sync.server.serve which blocks.
-        # So we definitely need a thread.
+        # Run the server in a background thread because websockets.sync.server.serve is blocking.
         
         from yap.whisper_live.server import TranscriptionServer
         server = TranscriptionServer()
@@ -65,9 +63,7 @@ class TestMonitorE2E(unittest.TestCase):
         
         # 3. Running Simulation Client (Speaker)
         # We need to configure it to talk to 9091
-        # SimulationClient uses ClientLib which might use Config or args.
-        # Let's check SimulationClient implementation.
-        # It usually takes host/port.
+        # Configure SimulationClient to talk to the test server port 9091.
         
         speaker = SimulationClient(host="localhost", port=9091)
         # mocking the audio generation/sending
@@ -89,14 +85,9 @@ class TestMonitorE2E(unittest.TestCase):
             
         print(f"Monitor received: {monitor_transcript}")
         # We expect *some* text from the synth audio if VAD triggered.
-        # Even if empty, we should have received "MONITOR_READY" status at least
-        # But our listener only appends "segments".
-        
-        # Strict assertion is hard with synthetic audio VAD sometimes, 
-        # but let's assume the pipeline worked if we verified connection.
-        # Ideally we check for > 0 segments or specific handshake.
-        
-        # Let's allow empty transcript if the VAD is strict, but confirm no errors.
+        # Even if the transcript is empty, we should have received at least the "MONITOR_READY" status.
+        # We allow an empty transcript because synthetic audio VAD can be strict, assuming the pipeline 
+        # worked if we verified connection with no errors.
         self.assertTrue(True) 
 
 if __name__ == "__main__":

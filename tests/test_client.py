@@ -38,8 +38,7 @@ class TestVoiceClient(unittest.TestCase):
             mock_ws_connect.return_value.__aenter__.return_value = mock_ws
             
             # Mock recv sequence: SERVER_READY -> Stop
-            # We mock send_audio to return immediately (via stop_event check or exception)
-            # Actually, run() waits for SERVER_READY then records.
+            # Mock send_audio to return immediately as run() waits for SERVER_READY before recording.
             mock_ws.recv.side_effect = [
                 '{"message": "SERVER_READY"}',
                 asyncio.CancelledError # Break loop if needed or just hang

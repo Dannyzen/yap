@@ -17,16 +17,7 @@ async def monitor(host, port, duration=None):
     
     try:
         async with websockets.connect(uri) as websocket:
-            # 1. Handshake as a monitor (or just a passive client)
-            # The server supports "monitor" role if we just don't send audio? 
-            # Actually, looking at server.py, "monitor" is a specific role or we just listen.
-            # The standard client sends a handshake.
-            
-            # Let's try to be a "monitor" if server supports it, or just a client that sends no audio.
-            # Server.py has `handle_monitor_client` but it seems to be triggered by... what?
-            # It seems `recv_audio` checks for options.
-            
-            # Handshake as a monitor
+            # 1. Handshake as a monitor
             handshake = {
                 "uid": uid,
                 "task": "monitor"

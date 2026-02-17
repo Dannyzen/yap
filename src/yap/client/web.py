@@ -34,9 +34,9 @@ def main():
     web_client_path = os.path.join(project_root, "examples", "web-client", "index.html")
     
     if not os.path.exists(web_client_path):
-        # Fallback: maybe we are installed as a package?
-        # In a real package install, we might need to ship this file as package_data
-        # For now, let's assume dev environment
+        # Fallback for package installations
+        # In a real package install, we need to ship this file as package_data
+        # For now, it assumes a dev environment
         print(f"⚠️  Could not find Web Client at: {web_client_path}")
         print("   Please ensure you are running from the project root.")
         return

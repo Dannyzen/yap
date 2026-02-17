@@ -370,8 +370,8 @@ class ServeClientBase(object):
         if self.current_out.strip() == self.prev_out.strip() and self.current_out != '':
             self.same_output_count += 1
 
-            # if we remove the audio because of same output on the nth reptition we might remove the 
-            # audio thats not yet transcribed so, capturing the time when it was repeated for the first time
+            # If we remove the audio because of same output on the nth repetition, we risk removing
+            # audio that is not yet transcribed. So, capturing the time when it was repeated for the first time.
             if self.end_time_for_same_output is None:
                 self.end_time_for_same_output = self.get_segment_end(segments[-1])
             time.sleep(0.1)  # wait briefly for any new voice activity
